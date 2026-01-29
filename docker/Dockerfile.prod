@@ -1,0 +1,62 @@
+FROM php:8.4-fpm-alpine AS base
+
+# Instalar dependências mínimas para produção
+RUN apk add --no-cache \
+    libpng-dev \
+    oniguruma-dev \
+    libxml2-dev \
+    libzip-dev \
+    zip \
+    unzip \
+    curl \
+    git \
+    && docker-php-ext-install pdo_mysql mbstring exif pcntl bcmath gd zip opcache
+
+# ========== Stage: Composer Dependencies ==========
+FROM base AS composer-deps
+
+COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
+
+WORKDIR /var/www
+
+# Copiar apenas arquivos necessários para composer
+COPY composer.json composer.lock ./
+
+# Instalar dependências sem dev
+RUN composer install --no-dev --no-scripts --no-autoloader --prefer-dist
+
+# ========== Stage: Final Production ==========
+FROM base AS production
+
+WORKDIR /var/www
+
+# Copiar código da aplicação
+COPY --chown=www-data:www-data . .
+
+# Copiar dependências do composer
+COPY --from=composer-deps --chown=www-data:www-data /var/www/vendor ./vendor
+
+# Copiar Composer para otimização
+COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
+
+# Copiar configuração PHP para produção
+COPY docker/php/php.prod.ini /usr/local/etc/php/conf.d/custom.ini
+
+# Otimizar autoloader e cache
+RUN composer dump-autoload --optimize --classmap-authoritative \
+    && php artisan config:cache \
+    && php artisan route:cache \
+    && php artisan view:cache \
+    && rm /usr/bin/composer
+
+# Limpar arquivos desnecessários
+RUN rm -rf tests .git .github docker \
+    && rm -f .env.example .gitignore .gitattributes phpunit.xml
+
+RUN chown -R www-data:www-data /var/www/storage /var/www/bootstrap/cache
+
+USER www-data
+
+EXPOSE 9000
+
+CMD ["php-fpm"]

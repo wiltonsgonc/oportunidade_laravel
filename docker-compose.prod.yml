@@ -1,0 +1,82 @@
+# ==============================================
+# PRODUÇÃO - Arquivo auto-suficiente
+# Uso: podman compose -f docker-compose.prod.yml up -d --build
+# ==============================================
+
+services:
+  # -------- PHP-FPM (Laravel) --------
+  app:
+    build:
+      context: .
+      dockerfile: docker/Dockerfile.prod
+    container_name: laravel_app
+    restart: unless-stopped
+    # Sem volumes - código está na imagem
+    networks:
+      - laravel
+    depends_on:
+      - db
+      - redis
+    healthcheck:
+      test: ["CMD-SHELL", "php-fpm-healthcheck || exit 1"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+
+  # -------- Nginx --------
+  webserver:
+    image: nginx:alpine
+    container_name: nginx_webserver
+    restart: unless-stopped
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./:/var/www:ro
+      - ./docker/nginx/conf.d/default.prod.conf:/etc/nginx/conf.d/default.conf:ro
+      - ./docker/nginx/ssl:/etc/nginx/ssl:ro
+    depends_on:
+      - app
+    networks:
+      - laravel
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost/health"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+
+  # -------- MySQL --------
+  db:
+    image: mysql:8.0
+    container_name: mysql_db
+    restart: unless-stopped
+    # Porta NÃO exposta externamente em produção!
+    environment:
+      MYSQL_DATABASE: ${DB_DATABASE:-laravel}
+      MYSQL_ROOT_PASSWORD: ${DB_ROOT_PASSWORD}
+      MYSQL_PASSWORD: ${DB_PASSWORD}
+      MYSQL_USER: ${DB_USERNAME:-laravel}
+    volumes:
+      - dbdata:/var/lib/mysql
+      - ./docker/mysql/my.cnf:/etc/mysql/conf.d/custom.cnf:ro
+    networks:
+      - laravel
+
+  # -------- Redis (Cache/Sessions/Queues) --------
+  redis:
+    image: redis:alpine
+    container_name: redis_prod
+    restart: unless-stopped
+    command: redis-server --appendonly yes --requirepass ${REDIS_PASSWORD}
+    volumes:
+      - redisdata:/data
+    networks:
+      - laravel
+
+networks:
+  laravel:
+    driver: bridge
+
+volumes:
+  dbdata:
+  redisdata:
