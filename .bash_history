@@ -3,7 +3,6 @@ php artisan key:generate
 artisan
 php artisan
 php artisan migrate
-ls
 php artisan make:migration create_usuarios_table
 php artisan make:migration create_vagas_table
 php artisan make:migration create_vaga_anexos_table
