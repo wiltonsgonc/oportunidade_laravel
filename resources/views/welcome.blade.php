@@ -92,7 +92,7 @@
         <div class="container">
             <div class="row">
                 <div class="col-md-6 text-center text-md-start">
-                    <p class="mb-0">&copy; {{ date('Y') }} SENAI CIMATEC</p>
+                    <p class="mb-0"> {{ date('Y') }} SENAI CIMATEC</p>
                 </div>
             </div>
         </div>
