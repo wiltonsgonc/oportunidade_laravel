@@ -1,0 +1,247 @@
+/* ================================================= */
+/* 1. ESTILOS GERAIS E LAYOUT DO BODY                */
+/* ================================================= */
+
+body {
+    background-color: #f8f9fa;
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+    margin: 0;
+    font-family: Arial, sans-serif;
+}
+
+/* FLEX-GROW SEM IMAGEM DE FUNDO - SERÁ CONTROLADO PELAS CLASSES DE FILTRO */
+.flex-grow {
+    flex: 1;
+    /* PROPRIEDADES DE BACKGROUND SERÃO APLICADAS PELAS CLASSES DE FILTRO */
+}
+
+/* ================================================= */
+/* 2. ESTILOS DE CORES E BOTÕES                      */
+/* ================================================= */
+
+.bg-primary {
+    background-color: #0077b6 !important;
+}
+
+.border-primary {
+    border-color: #0077b6 !important;
+}
+
+.text-primary {
+    color: #0077b6 !important;
+}
+
+.btn-primary {
+    background-color: #0077b6;
+    border-color: #0077b6;
+    transition: background-color 0.3s;
+}
+
+.btn-primary:hover {
+    background-color: #005a8a;
+    border-color: #005a8a;
+}
+
+.bs-secondary-bg {
+    background-color: #ffffff !important; 
+}
+
+/* ================================================= */
+/* 3. ESTILOS DE CARDS E CONTEÚDO                   */
+/* ================================================= */
+
+.card {
+    transition: transform 0.2s;
+}
+
+.card:hover {
+    transform: translateY(-5px);
+}
+
+.text-justify-custom {
+    text-align: justify;
+}
+
+.list-group-flush .list-group-item {
+    border-width: 0 0 1px 0 !important; 
+}
+
+.vaga-header {
+    background-color: rgba(248, 249, 250, 0.95);
+    padding: 40px;
+    border-radius: 10px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    margin-bottom: 30px;
+}
+
+/* ================================================= */
+/* 4. ESTILOS DA PÁGINA INICIAL (INDEX)             */
+/* ================================================= */
+
+.index-content {
+    color: #ffffff !important; 
+}
+
+.index-content h1,
+.index-content h2,
+.index-content p,
+.index-content li,
+.index-content strong {
+    color: #ffffff !important;
+    text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.8);
+}
+
+.index-content a:not(.btn) {
+    color: #add8e6 !important;
+    text-decoration: underline;
+    text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.8);
+}
+
+.index-content .btn {
+    text-shadow: none !important; 
+}
+
+.index-title {
+    font-size: 2.5rem;
+    margin-bottom: 2rem;
+    text-align: center;
+    font-weight: bold;
+}
+
+.index-description p {
+    font-size: 1.1rem;
+    line-height: 1.8;
+    margin-bottom: 2rem;
+}
+
+.index-subtitle {
+    font-size: 1.5rem;
+    margin: 2rem 0 1rem;
+    font-weight: bold;
+}
+
+.index-list,
+.index-questions {
+    list-style-type: none;
+    padding-left: 0;
+    margin-bottom: 1.5rem;
+}
+
+.index-list li,
+.index-questions li {
+    position: relative;
+    padding-left: 1.5rem;
+    margin-bottom: 0.5rem;
+}
+
+.index-questions li {
+    font-style: italic;
+}
+
+.index-list li:before { 
+    content: "•";
+    color: #add8e6 !important;
+    font-weight: bold;
+    display: inline-block;
+    width: 1em;
+    margin-left: -1em;
+    position: absolute;
+    left: 0;
+}
+
+.index-questions li:before { 
+    content: "•";
+    color: #add8e6 !important; 
+    font-weight: bold;
+    display: inline-block;
+    width: 1em;
+    margin-left: -1em;
+    position: absolute;
+    left: 0;
+}
+
+/* ================================================= */
+/* 5. SWEETALERT2 E RESPONSIVO                      */
+/* ================================================= */
+
+.custom-swal {
+    font-family: system-ui, -apple-system, sans-serif;
+}
+
+.swal2-popup {
+    font-size: 1rem;
+}
+
+.swal2-actions {
+    margin-top: 1.5rem;
+}
+
+@media (max-width: 768px) {
+    .index-content {
+        padding: 20px;
+    }
+
+    .index-title {
+        font-size: 2rem;
+    }
+
+    .index-subtitle {
+        font-size: 1.3rem;
+    }
+}
+
+/* ================================================= */
+/* 6. PLANOS DE FUNDO SVG - CORREÇÃO DEFINITIVA     */
+/* ================================================= */
+
+/* PROPRIEDADES COMUNS PARA TODOS OS FUNDOS */
+.flex-grow.filtro-padrao,
+.flex-grow.filtro-tecnologico,
+.flex-grow.filtro-pos-pesquisa,
+.flex-grow.filtro-graduacao {
+    background-size: cover !important;
+    background-position: center !important;
+    background-repeat: no-repeat !important;
+    position: relative;
+}
+
+/* IMAGEM PADRÃO */
+.flex-grow.filtro-padrao {
+    background-image: url('../img/padrao.svg') !important;
+}
+
+/* FUNDOS ESPECÍFICOS */
+.flex-grow.filtro-tecnologico {
+    background-image: url('../img/inovacao.svg') !important;
+}
+
+.flex-grow.filtro-pos-pesquisa {
+    background-image: url('../img/pos.svg') !important;
+}
+
+.flex-grow.filtro-graduacao {
+    background-image: url('../img/graduacao.svg') !important;
+}
+
+/* OVERLAY PARA CONTRASTE */
+.flex-grow.filtro-padrao::before,
+.flex-grow.filtro-tecnologico::before,
+.flex-grow.filtro-pos-pesquisa::before,
+.flex-grow.filtro-graduacao::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.3);
+    z-index: 0;
+}
+
+/* CONTEÚDO ACIMA DO OVERLAY */
+.flex-grow > .container {
+    position: relative;
+    z-index: 1;
+}
