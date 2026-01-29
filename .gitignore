@@ -3,7 +3,7 @@
 .env
 .env.dev
 .env.prod
-.bash_history
+/.bash_history
 .phpactor.json
 .phpunit.result.cache
 /.fleet
