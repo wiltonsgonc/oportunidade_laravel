@@ -30,7 +30,13 @@ return new class extends Migration
             $table->enum('status', ['aberto', 'encerrado', 'arquivado'])->default('aberto');
             $table->integer('anexos_count')->default(0);
             $table->integer('retificacoes_count')->default(0);
+            
+            // ADICIONAR ESTAS COLUNAS:
+            $table->foreignId('criado_por')->nullable()->constrained('usuarios')->onDelete('set null');
+            $table->foreignId('atualizado_por')->nullable()->constrained('usuarios')->onDelete('set null');
+            
             $table->timestamps();
+            $table->softDeletes(); // ADICIONAR PARA SOFT DELETES
             
             $table->index('hash_edital');
             $table->index('hash_resultados');
