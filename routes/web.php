@@ -1,38 +1,42 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\AuthController;
+use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\WelcomeController;
-use App\Http\Controllers\Public\VagaController;
-use App\Http\Controllers\Public\DownloadController;
-use App\Http\Controllers\Admin\AuthController;
+use App\Http\Controllers\VagaController;
 
-// Rota principal
-Route::get('/', [WelcomeController::class, 'index'])->name('welcome');
+/*
+|--------------------------------------------------------------------------
+| Web Routes
+|--------------------------------------------------------------------------
+*/
+
+// Página inicial
+Route::get('/', [WelcomeController::class, 'index'])->name('home');
 
 // Rotas públicas de vagas
-Route::prefix('vagas')->name('vagas.')->group(function () {
-    // Página principal de vagas (home.php)
-    Route::get('/home', [VagaController::class, 'home'])->name('home');
-    
-    // Lista de vagas (vagas.php) - esta é a rota principal
-    Route::get('/', [VagaController::class, 'index'])->name('index');
+Route::get('/vagas', [VagaController::class, 'index'])->name('vagas.home');
+Route::get('/vagas/{setor}', [VagaController::class, 'bySetor'])->name('vagas.setor');
+
+// Rotas de autenticação
+Route::middleware('guest')->group(function () {
+    Route::get('/login', [AuthController::class, 'showLoginForm'])->name('login');
+    Route::post('/login', [AuthController::class, 'login'])->name('login.post');
 });
 
-// Rotas de download
-Route::prefix('download')->name('download.')->group(function () {
-    Route::get('/edital/{id}/{token}', [DownloadController::class, 'edital'])->name('edital');
-    Route::get('/resultados/{id}/{token}', [DownloadController::class, 'resultados'])->name('resultados');
-    Route::get('/anexo/{id}/{token}', [DownloadController::class, 'anexo'])->name('anexo');
-    Route::get('/retificacao/{id}/{token}', [DownloadController::class, 'retificacao'])->name('retificacao');
+Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
+
+// Rotas protegidas
+Route::middleware(['auth'])->group(function () {
+    Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
+    
+    // Alterar senha
+    Route::get('/alterar-senha', function () {
+        return view('auth.change-password');
+    })->name('password.change');
 });
 
-// Rotas de administração (placeholder)
-Route::prefix('admin')->name('admin.')->group(function () {
-    Route::get('/login', function () {
-        return view('admin.auth.login');
-    })->name('login');
-    
-    // Para evitar erro, crie uma rota temporária
-    // Route::get('/login', [AuthController::class, 'showLoginForm'])->name('login');
-    // Route::post('/login', [AuthController::class, 'login']);
-});
+// Para compatibilidade com links antigos
+Route::redirect('/admin', '/dashboard');
+Route::redirect('/admin/login', '/login');

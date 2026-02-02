@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -58,7 +59,7 @@
 
         .card:hover {
             transform: translateY(-5px);
-            box-shadow: 0 10px 20px rgba(0,0,0,0.2);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
         }
 
         /* Responsividade da tabela */
@@ -69,6 +70,7 @@
     </style>
     @stack('styles')
 </head>
+
 <body>
     <!-- Navbar -->
     <nav class="navbar navbar-expand-lg navbar-light bs-secondary-bg">
@@ -88,7 +90,7 @@
 
             <!-- Botão do admin -->
             <div class="d-flex">
-                <a href="{{ route('admin.login') }}" target="_blank" class="btn btn-primary text-nowrap bi bi-person">
+                <a href="{{ route('login') }}" target="_blank" class="btn btn-primary text-nowrap bi bi-person">
                     Área do Admin
                 </a>
             </div>
@@ -113,4 +115,5 @@
     <script src="{{ asset('assets/js/script.js') }}"></script>
     @stack('scripts')
 </body>
+
 </html>

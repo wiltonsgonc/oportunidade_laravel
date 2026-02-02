@@ -1,5 +1,5 @@
 <?php
-
+// app/Models/VagaAnexo.php
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -16,11 +16,19 @@ class VagaAnexo extends Model
         'nome_arquivo',
         'nome_original',
         'descricao',
-        'hash_anexo'
+        'hash_anexo',
+        'tamanho',
+        'mime_type',
+        'criado_por'
     ];
 
     public function vaga()
     {
         return $this->belongsTo(Vaga::class, 'vaga_id');
+    }
+
+    public function criador()
+    {
+        return $this->belongsTo(Usuario::class, 'criado_por');
     }
 }

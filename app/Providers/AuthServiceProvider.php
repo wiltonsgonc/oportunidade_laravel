@@ -4,16 +4,25 @@ namespace App\Providers;
 
 use Illuminate\Foundation\Support\Providers\AuthServiceProvider as ServiceProvider;
 use Illuminate\Support\Facades\Auth;
-use App\Models\Usuario;
 
 class AuthServiceProvider extends ServiceProvider
 {
-    public function boot()
+    /**
+     * The model to policy mappings for the application.
+     *
+     * @var array<class-string, class-string>
+     */
+    protected $policies = [
+        // 'App\Models\Model' => 'App\Policies\ModelPolicy',
+    ];
+
+    /**
+     * Register any authentication / authorization services.
+     */
+    public function boot(): void
     {
         $this->registerPolicies();
 
-        Auth::provider('usuarios', function ($app, array $config) {
-            return new \Illuminate\Auth\EloquentUserProvider($app['hash'], Usuario::class);
-        });
+        // Custom user provider já está configurado no config/auth.php
     }
 }

@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -9,6 +10,7 @@
     <link rel="stylesheet" href="{{ asset('assets/css/bootstrap.min.css') }}">
     <link rel="stylesheet" href="{{ asset('assets/css/style.css') }}">
 </head>
+
 <body>
     <nav class="navbar navbar-expand-lg navbar-light bs-secondary-bg">
         <div class="container">
@@ -27,7 +29,7 @@
 
             <!-- Botão do admin -->
             <div class="d-flex">
-                <a href="{{ route('admin.login') }}" target="_blank" class="btn btn-primary text-nowrap bi bi-person">
+                <a href="{{ route('login') }}" target="_blank" class="btn btn-primary text-nowrap bi bi-person">
                     Área do Admin
                 </a>
             </div>
@@ -70,15 +72,15 @@
                     <div class="index-cta text-center mt-5 mb-5">
                         <h3 class="text-light mb-4">Escolha sua área de interesse:</h3>
                         <div class="d-grid gap-2 d-md-block">
-                            <a href="{{ route('vagas.home', ['setor' => 'GRADUACAO']) }}" class="btn btn-primary btn-lg mb-2">
+                            <a href="{{ url('/vagas?setor=GRADUACAO') }}" class="btn btn-primary btn-lg mb-2">
                                 <i class="bi bi-mortarboard"></i> Graduação e Extensão
                             </a>
 
-                            <a href="{{ route('vagas.home', ['setor' => 'POS_PESQUISA']) }}" class="btn btn-primary btn-lg mb-2">
+                            <a href="{{ url('/vagas?setor=POS_PESQUISA') }}" class="btn btn-primary btn-lg mb-2">
                                 <i class="bi bi-mortarboard-fill"></i> Pós-Graduação e Pesquisa
                             </a>
 
-                            <a href="{{ route('vagas.home', ['setor' => 'AREA_TECNOLOGICA']) }}" class="btn btn-primary btn-lg mb-2">
+                            <a href="{{ url('/vagas?setor=AREA_TECNOLOGICA') }}" class="btn btn-primary btn-lg mb-2">
                                 <i class="bi bi-book"></i> Projetos de Inovação
                             </a>
                         </div>
@@ -100,4 +102,5 @@
 
     <script src="{{ asset('assets/js/bootstrap.bundle.min.js') }}"></script>
 </body>
+
 </html>

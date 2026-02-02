@@ -11,10 +11,13 @@ return new class extends Migration
         Schema::create('vaga_anexos', function (Blueprint $table) {
             $table->id();
             $table->foreignId('vaga_id')->constrained('vagas')->onDelete('cascade');
-            $table->string('nome_arquivo', 255);
-            $table->string('nome_original', 255);
-            $table->string('descricao', 500)->nullable();
-            $table->string('hash_anexo', 64)->unique();
+            $table->string('nome_arquivo');
+            $table->string('nome_original');
+            $table->text('descricao')->nullable();
+            $table->string('hash_anexo');
+            $table->integer('tamanho')->nullable();
+            $table->string('mime_type', 100)->nullable();
+            $table->foreignId('criado_por')->nullable()->constrained('usuarios');
             $table->timestamps();
             
             $table->index('vaga_id');
