@@ -6,6 +6,7 @@
 .bash_history
 .phpactor.json
 .phpunit.result.cache
+.lesshst
 /.fleet
 /.idea
 /.nova
