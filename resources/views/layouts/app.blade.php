@@ -86,8 +86,6 @@
         <div class="container text-center">
             <p class="text-muted mb-0">
                 &copy; {{ date('Y') }} SENAI CIMATEC - Sistema de Vagas
-                <span class="d-block d-md-inline"> | </span>
-                <span class="d-block d-md-inline">Versão: Desenvolvimento</span>
             </p>
         </div>
     </footer>
