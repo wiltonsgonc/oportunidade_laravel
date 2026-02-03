@@ -1,42 +1,65 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\AuthController;
-use App\Http\Controllers\DashboardController;
-use App\Http\Controllers\WelcomeController;
 use App\Http\Controllers\VagaController;
+use App\Http\Controllers\Auth\LoginController;
 
 /*
 |--------------------------------------------------------------------------
-| Web Routes
+| Rotas Públicas
 |--------------------------------------------------------------------------
 */
 
 // Página inicial
-Route::get('/', [WelcomeController::class, 'index'])->name('home');
+Route::get('/', function () {
+    return view('welcome');
+})->name('welcome');
 
-// Rotas públicas de vagas
-Route::get('/vagas', [VagaController::class, 'index'])->name('vagas.home');
-Route::get('/vagas/{setor}', [VagaController::class, 'bySetor'])->name('vagas.setor');
+// Página inicial (alias)
+Route::get('/home', function () {
+    return view('welcome');
+})->name('home');
 
-// Rotas de autenticação
-Route::middleware('guest')->group(function () {
-    Route::get('/login', [AuthController::class, 'showLoginForm'])->name('login');
-    Route::post('/login', [AuthController::class, 'login'])->name('login.post');
+// Rotas de vagas públicas
+Route::prefix('vagas')->group(function () {
+    // Listar vagas com filtros
+    Route::get('/', [VagaController::class, 'index'])->name('vagas.index');
+    
+    // Rotas de setor
+    Route::get('/setor/{setor}', [VagaController::class, 'bySetor'])->name('vagas.bySetor');
+    
+    // Download de arquivos
+    Route::get('/download/{tipo}/{id}', function ($tipo, $id) {
+        return app(VagaController::class)->download($tipo, $id);
+    })->name('vagas.download');
 });
 
-Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
+// Rotas de autenticação (Laravel Breeze padrão)
+Route::get('/login', [LoginController::class, 'showLoginForm'])->name('login');
+Route::post('/login', [LoginController::class, 'login']);
+Route::post('/logout', [LoginController::class, 'logout'])->name('logout');
 
-// Rotas protegidas
+/*
+|--------------------------------------------------------------------------
+| Rotas Protegidas (Dashboard)
+|--------------------------------------------------------------------------
+*/
 Route::middleware(['auth'])->group(function () {
-    Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
+    Route::get('/dashboard', function () {
+        return view('dashboard');
+    })->name('dashboard');
     
-    // Alterar senha
-    Route::get('/alterar-senha', function () {
+    // Rotas administrativas para vagas
+    Route::prefix('admin/vagas')->group(function () {
+        Route::post('/{id}/restaurar', [VagaController::class, 'restore'])
+            ->name('admin.vagas.restore');
+            
+        Route::delete('/{id}/force-delete', [VagaController::class, 'forceDelete'])
+            ->name('admin.vagas.forceDelete');
+    });
+    
+    // Alteração de senha
+    Route::get('/password/change', function () {
         return view('auth.change-password');
     })->name('password.change');
 });
-
-// Para compatibilidade com links antigos
-Route::redirect('/admin', '/dashboard');
-Route::redirect('/admin/login', '/login');

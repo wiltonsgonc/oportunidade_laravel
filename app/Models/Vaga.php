@@ -9,8 +9,8 @@ use App\Traits\Auditavel;
 
 class Vaga extends Model
 {
-    use HasFactory, SoftDeletes, Auditavel; // Adicione a trait aqui
-
+    use HasFactory, SoftDeletes, Auditavel;
+    
     protected $table = 'vagas';
     
     protected $fillable = [
@@ -43,6 +43,7 @@ class Vaga extends Model
         'mensalidade_bolsa' => 'decimal:2'
     ];
 
+    // ADICIONAR ESTA LINHA:
     protected $dates = ['deleted_at'];
 
     // Relacionamentos
@@ -71,20 +72,17 @@ class Vaga extends Model
         return $this->belongsTo(Usuario::class, 'atualizado_por');
     }
 
-    // Accessors (calculados dinamicamente)
+    // Accessors
     public function getAnexosCountAttribute()
     {
-        // Se já tiver carregado o relacionamento com contagem
         if (isset($this->attributes['anexos_count'])) {
             return $this->attributes['anexos_count'];
         }
         
-        // Se o relacionamento já foi carregado
         if ($this->relationLoaded('anexos')) {
             return $this->anexos->count();
         }
         
-        // Caso contrário, contar no banco
         return $this->anexos()->count();
     }
 
@@ -101,7 +99,7 @@ class Vaga extends Model
         return $this->retificacoes()->count();
     }
 
-    // Scopes (para usar nos controllers)
+    // Scopes
     public function scopeAbertas($query)
     {
         return $query->where('status', 'aberto');

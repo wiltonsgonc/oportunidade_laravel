@@ -245,3 +245,121 @@ body {
     position: relative;
     z-index: 1;
 }
+
+/* ================================================= */
+/* 7. ESTILOS ESPECÍFICOS PARA PÁGINA DE VAGAS      */
+/* ================================================= */
+
+/* Botões de filtro ativos */
+.btn-group .btn.btn-primary {
+    background-color: #0077b6;
+    border-color: #0077b6;
+}
+
+.btn-group .btn.btn-outline-primary {
+    color: #0077b6;
+    border-color: #0077b6;
+}
+
+.btn-group .btn.btn-outline-primary:hover {
+    background-color: #0077b6;
+    border-color: #0077b6;
+    color: white;
+}
+
+/* Botões de status */
+.btn-group .btn-success {
+    background-color: #28a745;
+    border-color: #28a745;
+}
+
+.btn-group .btn-outline-success {
+    color: #28a745;
+    border-color: #28a745;
+}
+
+.btn-group .btn-outline-success:hover {
+    background-color: #28a745;
+    border-color: #28a745;
+    color: white;
+}
+
+.btn-group .btn-danger {
+    background-color: #dc3545;
+    border-color: #dc3545;
+}
+
+.btn-group .btn-outline-danger {
+    color: #dc3545;
+    border-color: #dc3545;
+}
+
+.btn-group .btn-outline-danger:hover {
+    background-color: #dc3545;
+    border-color: #dc3545;
+    color: white;
+}
+
+/* Estilos para texto dentro dos filtros */
+.flex-grow .text-light h3,
+.flex-grow .text-light .card-title,
+.flex-grow .text-light .card-text,
+.flex-grow .text-light .list-group-item {
+    text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.8);
+}
+
+/* Ajustes para tabela de vagas encerradas */
+.table-responsive {
+    background: rgba(255, 255, 255, 0.9);
+    border-radius: 10px;
+    padding: 20px;
+}
+
+/* Ajustes para cards em diferentes fundos */
+.flex-grow.filtro-graduacao .card,
+.flex-grow.filtro-pos-pesquisa .card,
+.flex-grow.filtro-tecnologico .card,
+.flex-grow.filtro-padrao .card {
+    background: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+/* Paginação estilizada */
+.pagination .page-link {
+    background-color: rgba(255, 255, 255, 0.9);
+    border-color: #dee2e6;
+    color: #0077b6;
+}
+
+.pagination .page-item.active .page-link {
+    background-color: #0077b6;
+    border-color: #0077b6;
+    color: white;
+}
+
+.pagination .page-link:hover {
+    background-color: #005a8a;
+    border-color: #005a8a;
+    color: white;
+}
+
+/* Responsividade */
+@media (max-width: 768px) {
+    .btn-group {
+        flex-wrap: wrap;
+    }
+    
+    .btn-group .btn {
+        margin-bottom: 5px;
+        flex: 1 0 auto;
+    }
+    
+    .vaga-header {
+        padding: 20px;
+    }
+    
+    .vagas-lista {
+        padding: 15px;
+    }
+}
