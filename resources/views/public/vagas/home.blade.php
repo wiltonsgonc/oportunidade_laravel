@@ -1,3 +1,4 @@
+<!-- public/vagas/home.blade.php -->
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
@@ -68,62 +69,64 @@
     <!-- Conteúdo Principal com Classe de Filtro -->
     <div class="flex-grow {{ $filtro_classe }}">
         <div class="container mt-4">
-            <!-- Botões de status -->
-            <div class="d-flex justify-content-center mb-4">
-                <div class="btn-group" role="group">
-                    @php
-                    $current_params = request()->query();
-                    unset($current_params['status']);
-                    @endphp
-                    
-                    <a href="{{ route('vagas.index', array_merge($current_params, ['status' => 'aberto'])) }}" 
-                       class="btn btn-{{ ($status ?? 'aberto') === 'aberto' ? 'success' : 'outline-success' }}">
-                        Vagas Abertas
-                    </a>
-                    <a href="{{ route('vagas.index', array_merge($current_params, ['status' => 'encerrado'])) }}" 
-                       class="btn btn-{{ ($status ?? '') === 'encerrado' ? 'danger' : 'outline-danger' }}">
-                        Vagas Encerradas
-                    </a>
+            <!-- Linha de filtros (Botões de status + Dropdown de setor) -->
+            <div class="row justify-content-center mb-4">
+                <div class="col-auto">
+                    <!-- Botões de status -->
+                    <div class="btn-group" role="group">
+                        @php
+                        $current_params = request()->query();
+                        unset($current_params['status']);
+                        @endphp
+                        
+                        <a href="{{ route('vagas.index', array_merge($current_params, ['status' => 'aberto'])) }}" 
+                           class="btn btn-{{ ($status ?? 'aberto') === 'aberto' ? 'success' : 'outline-success' }}">
+                            Vagas Abertas
+                        </a>
+                        <a href="{{ route('vagas.index', array_merge($current_params, ['status' => 'encerrado'])) }}" 
+                           class="btn btn-{{ ($status ?? '') === 'encerrado' ? 'danger' : 'outline-danger' }}">
+                            Vagas Encerradas
+                        </a>
+                    </div>
+                </div>
+                
+                <div class="col-auto">
+                    <!-- Dropdown de setor -->
+                    <div class="dropdown">
+                        <button class="btn btn-primary dropdown-toggle" type="button" 
+                                data-bs-toggle="dropdown" aria-expanded="false">
+                            {{ $setor_nome ?: 'Filtrar por Setor' }}
+                        </button>
+                        <ul class="dropdown-menu">
+                            <li>
+                                <a class="dropdown-item {{ !isset($setor) ? 'active fw-bold' : '' }}" 
+                                   href="{{ route('vagas.index', ['status' => $status ?? 'aberto']) }}">
+                                    Todas as Vagas
+                                </a>
+                            </li>
+                            <li><hr class="dropdown-divider"></li>
+                            <li>
+                                <a class="dropdown-item {{ ($setor ?? '') == 'GRADUACAO' ? 'active fw-bold' : '' }}" 
+                                   href="{{ route('vagas.index', ['setor' => 'GRADUACAO', 'status' => $status ?? 'aberto']) }}">
+                                    Graduação e Extensão
+                                </a>
+                            </li>
+                            <li>
+                                <a class="dropdown-item {{ ($setor ?? '') == 'POS_PESQUISA' ? 'active fw-bold' : '' }}" 
+                                   href="{{ route('vagas.index', ['setor' => 'POS_PESQUISA', 'status' => $status ?? 'aberto']) }}">
+                                    Pós-Graduação e Pesquisa
+                                </a>
+                            </li>
+                            <li>
+                                <a class="dropdown-item {{ ($setor ?? '') == 'AREA_TECNOLOGICA' ? 'active fw-bold' : '' }}" 
+                                   href="{{ route('vagas.index', ['setor' => 'AREA_TECNOLOGICA', 'status' => $status ?? 'aberto']) }}">
+                                    Projetos de Inovação
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
                 </div>
             </div>
-
-            <!-- Botões de setor -->
-            <div class="d-flex justify-content-center mb-4">
-                <div class="btn-group" role="group">
-                    <a href="{{ route('vagas.index', ['status' => $status ?? 'aberto']) }}" 
-                       class="btn {{ !isset($setor) ? 'btn-primary' : 'btn-outline-primary' }}">
-                        Todas as Vagas
-                    </a>
-                    <a href="{{ route('vagas.index', ['setor' => 'GRADUACAO', 'status' => $status ?? 'aberto']) }}" 
-                       class="btn {{ ($setor ?? '') == 'GRADUACAO' ? 'btn-primary' : 'btn-outline-primary' }}">
-                        Graduação e Extensão
-                    </a>
-                    <a href="{{ route('vagas.index', ['setor' => 'POS_PESQUISA', 'status' => $status ?? 'aberto']) }}" 
-                       class="btn {{ ($setor ?? '') == 'POS_PESQUISA' ? 'btn-primary' : 'btn-outline-primary' }}">
-                        Pós-Graduação e Pesquisa
-                    </a>
-                    <a href="{{ route('vagas.index', ['setor' => 'AREA_TECNOLOGICA', 'status' => $status ?? 'aberto']) }}" 
-                       class="btn {{ ($setor ?? '') == 'AREA_TECNOLOGICA' ? 'btn-primary' : 'btn-outline-primary' }}">
-                        Projetos de Inovação
-                    </a>
-                </div>
-            </div>
-
-            <!-- Cabeçalho do setor -->
-            @if($setor_nome)
-            <div class="vaga-header mb-4">
-                <h1 class="text-center text-primary">{{ $setor_nome }}</h1>
-                <p class="text-center text-muted">
-                    @if($setor == 'GRADUACAO')
-                    Vagas para graduação, extensão e estágios
-                    @elseif($setor == 'POS_PESQUISA')
-                    Vagas para pós-graduação, mestrado, doutorado e pesquisas
-                    @elseif($setor == 'AREA_TECNOLOGICA')
-                    Vagas para projetos de inovação e tecnologia
-                    @endif
-                </p>
-            </div>
-            @endif
 
             <!-- Listagem de vagas -->
             <div class="vagas-lista">
@@ -262,7 +265,7 @@
                         <div class="col-12">
                             <div class="alert alert-info text-center">
                                 <h4>Nenhuma vaga encontrada</h4>
-                                <p>Não há vagas disponíveis no momento para esta categoria.</p>
+                                <p>Não há vagas disponíveis no momento {{ $setor_nome ? "para $setor_nome" : '' }}.</p>
                                 <a href="{{ route('home') }}" class="btn btn-primary">Voltar para página inicial</a>
                             </div>
                         </div>
