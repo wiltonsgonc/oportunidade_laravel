@@ -1,15 +1,16 @@
 <?php
-// app/Models/Usuario.php
+
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Usuario extends Authenticatable
 {
-    use HasFactory, Notifiable;
+    use HasFactory, Notifiable, SoftDeletes;
 
     protected $table = 'usuarios';
     protected $primaryKey = 'id';
@@ -48,10 +49,20 @@ class Usuario extends Authenticatable
         return $this->senha;
     }
 
+    // Método para buscar por credenciais (usuario em vez de email)
+    public function findForPassport($username)
+    {
+        return $this->where('usuario', $username)
+                    ->orWhere('email', $username)
+                    ->first();
+    }
+
     // Mutator para hash da senha
     public function setSenhaAttribute($value)
     {
-        $this->attributes['senha'] = Hash::make($value);
+        if (!empty($value)) {
+            $this->attributes['senha'] = Hash::make($value);
+        }
     }
 
     // Relacionamentos

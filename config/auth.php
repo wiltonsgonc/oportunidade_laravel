@@ -4,18 +4,18 @@
 return [
     'defaults' => [
         'guard' => 'web',
-        'passwords' => 'usuarios',
+        'passwords' => 'users',
     ],
 
     'guards' => [
         'web' => [
             'driver' => 'session',
-            'provider' => 'usuarios',
+            'provider' => 'usuarios', // Alterado para 'usuarios'
         ],
     ],
 
     'providers' => [
-        'usuarios' => [
+        'usuarios' => [ // Novo provider para usuarios
             'driver' => 'eloquent',
             'model' => App\Models\Usuario::class,
         ],
