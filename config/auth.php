@@ -1,23 +1,27 @@
 <?php
 
-// config/auth.php
 return [
     'defaults' => [
         'guard' => 'web',
-        'passwords' => 'users',
+        'passwords' => 'usuarios', // Alterar para 'usuarios'
     ],
 
     'guards' => [
         'web' => [
             'driver' => 'session',
-            'provider' => 'usuarios', // Alterado para 'usuarios'
+            'provider' => 'usuarios', // Alterar para 'usuarios'
         ],
     ],
 
     'providers' => [
-        'usuarios' => [ // Novo provider para usuarios
+        'usuarios' => [
             'driver' => 'eloquent',
             'model' => App\Models\Usuario::class,
+        ],
+        
+        'users' => [
+            'driver' => 'eloquent',
+            'model' => App\Models\User::class,
         ],
     ],
 

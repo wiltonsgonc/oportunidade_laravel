@@ -27,6 +27,7 @@ class Usuario extends Authenticatable
         'token_expira',
         'ultimo_login',
         'ip_ultimo_login'
+        // Remover 'email_verified_at' se a coluna não existir
     ];
 
     protected $hidden = [
@@ -41,6 +42,7 @@ class Usuario extends Authenticatable
         'ativo' => 'boolean',
         'token_expira' => 'datetime',
         'ultimo_login' => 'datetime'
+        // Remover 'email_verified_at' se a coluna não existir
     ];
 
     // Método para compatibilidade com Laravel Auth

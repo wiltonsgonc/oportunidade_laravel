@@ -5,8 +5,10 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Dashboard - Admin</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css">
+    <link rel="icon" href="{{ asset('assets/img/favicon.ico') }}" type="image/ico">
+    <link rel="stylesheet" href="{{ asset('assets/icons/bootstrap-icons.css') }}">
+    <link rel="stylesheet" href="{{ asset('assets/css/bootstrap.min.css') }}">
+    <link rel="stylesheet" href="{{ asset('assets/css/style.css') }}">
 </head>
 <body>
     <nav class="navbar navbar-expand-lg navbar-light bg-light">
@@ -48,34 +50,77 @@
                 </div>
                 
                 <div class="row">
-                    <div class="col-md-4">
+                    <div class="col-md-3">
                         <div class="card bg-primary text-white">
                             <div class="card-body">
-                                <h6><i class="bi bi-people"></i> Usuários</h6>
-                                <h3>1</h3>
-                                <small>Admin cadastrado</small>
+                                <h6><i class="bi bi-people"></i> Usuários Ativos</h6>
+                                <h3>{{ $totalUsuarios }}</h3>
+                                <small>Usuários ativos</small>
                             </div>
                         </div>
                     </div>
-                    <div class="col-md-4">
+                    <div class="col-md-3">
                         <div class="card bg-success text-white">
                             <div class="card-body">
-                                <h6><i class="bi bi-briefcase"></i> Vagas</h6>
-                                <h3>0</h3>
-                                <small>Vagas cadastradas</small>
+                                <h6><i class="bi bi-briefcase"></i> Vagas Abertas</h6>
+                                <h3>{{ $vagasAbertas }}</h3>
+                                <small>Vagas disponíveis</small>
                             </div>
                         </div>
                     </div>
-                    <div class="col-md-4">
+                    <div class="col-md-3">
+                        <div class="card bg-warning text-white">
+                            <div class="card-body">
+                                <h6><i class="bi bi-briefcase-fill"></i> Vagas Encerradas</h6>
+                                <h3>{{ $vagasEncerradas }}</h3>
+                                <small>Vagas finalizadas</small>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
                         <div class="card bg-info text-white">
                             <div class="card-body">
-                                <h6><i class="bi bi-clock-history"></i> Status</h6>
-                                <h3>Sistema</h3>
-                                <small>Em desenvolvimento</small>
+                                <h6><i class="bi bi-briefcase"></i> Total de Vagas</h6>
+                                <h3>{{ $totalVagas }}</h3>
+                                <small>Total cadastrado</small>
                             </div>
                         </div>
                     </div>
                 </div>
+                
+                @if($ultimasVagas->count() > 0)
+                <div class="mt-4">
+                    <h6>Últimas Vagas Cadastradas</h6>
+                    <div class="table-responsive">
+                        <table class="table table-striped">
+                            <thead>
+                                <tr>
+                                    <th>Título</th>
+                                    <th>Status</th>
+                                    <th>Criado em</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach($ultimasVagas as $vaga)
+                                <tr>
+                                    <td>{{ $vaga->titulo ?? 'Sem título' }}</td>
+                                    <td>
+                                        @if($vaga->status == 'aberto')
+                                            <span class="badge bg-success">Aberto</span>
+                                        @elseif($vaga->status == 'encerrado')
+                                            <span class="badge bg-danger">Encerrado</span>
+                                        @else
+                                            <span class="badge bg-secondary">{{ $vaga->status }}</span>
+                                        @endif
+                                    </td>
+                                    <td>{{ $vaga->created_at->format('d/m/Y H:i') }}</td>
+                                </tr>
+                                @endforeach
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                @endif
                 
                 <div class="mt-4">
                     <h6>Links Rápidos</h6>
@@ -107,6 +152,6 @@
         </div>
     </div>
     
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="{{ asset('assets/js/bootstrap.bundle.min.js') }}"></script>
 </body>
 </html>
