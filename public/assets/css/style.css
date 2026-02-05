@@ -45,7 +45,7 @@ body {
 }
 
 .bs-secondary-bg {
-    background-color: #ffffff !important; 
+    background-color: #ffffff !important;
 }
 
 /* ================================================= */
@@ -65,7 +65,7 @@ body {
 }
 
 .list-group-flush .list-group-item {
-    border-width: 0 0 1px 0 !important; 
+    border-width: 0 0 1px 0 !important;
 }
 
 .vaga-header {
@@ -81,7 +81,7 @@ body {
 /* ================================================= */
 
 .index-content {
-    color: #ffffff !important; 
+    color: #ffffff !important;
 }
 
 .index-content h1,
@@ -100,7 +100,7 @@ body {
 }
 
 .index-content .btn {
-    text-shadow: none !important; 
+    text-shadow: none !important;
 }
 
 .index-title {
@@ -140,7 +140,7 @@ body {
     font-style: italic;
 }
 
-.index-list li:before { 
+.index-list li:before {
     content: "•";
     color: #add8e6 !important;
     font-weight: bold;
@@ -151,9 +151,9 @@ body {
     left: 0;
 }
 
-.index-questions li:before { 
+.index-questions li:before {
     content: "•";
-    color: #add8e6 !important; 
+    color: #add8e6 !important;
     font-weight: bold;
     display: inline-block;
     width: 1em;
@@ -167,7 +167,10 @@ body {
 /* ================================================= */
 
 .custom-swal {
-    font-family: system-ui, -apple-system, sans-serif;
+    font-family:
+        system-ui,
+        -apple-system,
+        sans-serif;
 }
 
 .swal2-popup {
@@ -349,17 +352,65 @@ body {
     .btn-group {
         flex-wrap: wrap;
     }
-    
+
     .btn-group .btn {
         margin-bottom: 5px;
         flex: 1 0 auto;
     }
-    
+
     .vaga-header {
         padding: 20px;
     }
-    
+
     .vagas-lista {
         padding: 15px;
     }
+}
+
+/* ================================================= */
+/* 8. ESTILOS ESPECÍFICOS PARA PÁGINA DE LOGIN      */
+/* ================================================= */
+
+/* Gradiente de fundo da página de login */
+.login-page-body {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+}
+
+/* Estilo do card de login */
+.login-card {
+    width: 100%;
+    max-width: 400px;
+    border-radius: 15px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+    margin-top: -50px;
+}
+
+/* Container do logo */
+.login-logo-container {
+    text-align: center;
+    margin-bottom: 2rem;
+}
+
+/* Ícone do logo */
+.login-logo-container i {
+    font-size: 3rem;
+    color: #667eea;
+    margin-bottom: 1rem;
+}
+
+/* Ajuste de altura e padding dos inputs */
+.login-form-control {
+    padding: 10px 15px;
+    height: 45px;
+}
+
+/* Ajuste de padding e peso do botão */
+.login-btn-primary {
+    padding: 12px;
+    font-weight: 500;
 }
