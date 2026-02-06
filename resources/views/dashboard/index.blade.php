@@ -8,22 +8,9 @@
 
     <!-- Cards de estatísticas -->
     <div class="row g-4 mb-5">
-        <div class="col-md-3">
-            <div class="stat-card stat-card-primary">
-                <div class="stat-card-body">
-                    <div class="stat-card-icon">
-                        <i class="bi bi-people"></i>
-                    </div>
-                    <div class="stat-card-content">
-                        <h6 class="stat-card-title">Usuários Ativos</h6>
-                        <h3 class="stat-card-value">{{ $totalUsuarios }}</h3>
-                        <small class="stat-card-subtitle">Usuários ativos no sistema</small>
-                    </div>
-                </div>
-            </div>
-        </div>
+
         
-        <div class="col-md-3">
+        <div class="col-md-4">
             <div class="stat-card stat-card-success">
                 <div class="stat-card-body">
                     <div class="stat-card-icon">
@@ -38,7 +25,7 @@
             </div>
         </div>
         
-        <div class="col-md-3">
+        <div class="col-md-4">
             <div class="stat-card stat-card-warning">
                 <div class="stat-card-body">
                     <div class="stat-card-icon">
@@ -53,7 +40,7 @@
             </div>
         </div>
         
-        <div class="col-md-3">
+        <div class="col-md-4">
             <div class="stat-card stat-card-info">
                 <div class="stat-card-body">
                     <div class="stat-card-icon">
@@ -140,6 +127,7 @@
         </div>
     </div>
     @endif
+ @endsection 
 
 @push('scripts')
 <script>

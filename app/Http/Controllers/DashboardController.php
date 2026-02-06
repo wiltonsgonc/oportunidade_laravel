@@ -39,14 +39,12 @@ class DashboardController extends Controller
         $totalVagas = Vaga::count();
         $vagasAbertas = Vaga::where('status', 'aberto')->count();
         $vagasEncerradas = Vaga::where('status', 'encerrado')->count();
-        $totalUsuarios = Usuario::where('ativo', true)->count();
         $ultimasVagas = Vaga::orderBy('created_at', 'desc')->take(10)->get();
         
         return view('dashboard.index', compact(
             'totalVagas', 
             'vagasAbertas', 
             'vagasEncerradas',
-            'totalUsuarios',
             'ultimasVagas'
         ));
     }
