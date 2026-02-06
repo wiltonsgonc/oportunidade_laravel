@@ -17,13 +17,12 @@ class DashboardController extends Controller
 
     public function index(Request $request)
     {
-        // Registrar log de acesso - REMOVIDA A COLUNA 'contexto'
+        // Registrar log de acesso
         if (Auth::check()) {
             try {
                 SistemaLog::create([
                     'nivel' => 'info',
                     'mensagem' => 'Acesso ao dashboard',
-                    // 'contexto' => ['user_id' => Auth::id()], // REMOVER ESTA LINHA
                     'usuario_id' => Auth::id(),
                     'ip_address' => $request->ip(),
                     'user_agent' => $request->userAgent(),
