@@ -5,24 +5,6 @@
 
 @section('content')
 <div class="container mt-4">
-    <!-- Cabeçalho do Dashboard -->
-    <div class="dashboard-header">
-        <h1 class="dashboard-title">
-            <i class="bi bi-speedometer2 me-2"></i>Dashboard
-        </h1>
-        <p class="dashboard-subtitle">Painel administrativo do sistema</p>
-    </div>
-
-    <!-- Mensagem de boas-vindas -->
-    <div class="alert alert-success dashboard-welcome">
-        <div class="d-flex align-items-center">
-            <i class="bi bi-info-circle-fill me-3 fs-4"></i>
-            <div>
-                <h6 class="mb-1">Bem-vindo ao Sistema de Oportunidades SENAI CIMATEC!</h6>
-                <p class="mb-0">Sistema em desenvolvimento. Esta é a área administrativa.</p>
-            </div>
-        </div>
-    </div>
 
     <!-- Cards de estatísticas -->
     <div class="row g-4 mb-5">
@@ -158,64 +140,6 @@
         </div>
     </div>
     @endif
-
-    <!-- Links Rápidos -->
-    <div class="card shadow-sm">
-        <div class="card-header bg-white border-0">
-            <h5 class="mb-0">
-                <i class="bi bi-lightning-charge me-2"></i>Links Rápidos
-            </h5>
-        </div>
-        <div class="card-body">
-            <div class="row g-3">
-                <div class="col-md-3 col-6">
-                    <a href="#" class="dashboard-quick-link dashboard-quick-link-primary">
-                        <div class="dashboard-quick-link-icon">
-                            <i class="bi bi-plus-circle"></i>
-                        </div>
-                        <div class="dashboard-quick-link-text">
-                            <h6>Nova Vaga</h6>
-                        </div>
-                    </a>
-                </div>
-                <div class="col-md-3 col-6">
-                    <a href="{{ route('password.change') }}" class="dashboard-quick-link dashboard-quick-link-warning">
-                        <div class="dashboard-quick-link-icon">
-                            <i class="bi bi-key"></i>
-                        </div>
-                        <div class="dashboard-quick-link-text">
-                            <h6>Alterar Senha</h6>
-                        </div>
-                    </a>
-                </div>
-                <div class="col-md-3 col-6">
-                    <a href="{{ route('home') }}" target="_blank" class="dashboard-quick-link dashboard-quick-link-secondary">
-                        <div class="dashboard-quick-link-icon">
-                            <i class="bi bi-globe"></i>
-                        </div>
-                        <div class="dashboard-quick-link-text">
-                            <h6>Site Público</h6>
-                        </div>
-                    </a>
-                </div>
-                <div class="col-md-3 col-6">
-                    <form method="POST" action="{{ route('logout') }}" class="h-100">
-                        @csrf
-                        <button type="submit" class="dashboard-quick-link dashboard-quick-link-danger">
-                            <div class="dashboard-quick-link-icon">
-                                <i class="bi bi-box-arrow-right"></i>
-                            </div>
-                            <div class="dashboard-quick-link-text">
-                                <h6>Sair</h6>
-                            </div>
-                        </button>
-                    </form>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
-@endsection
 
 @push('scripts')
 <script>

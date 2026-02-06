@@ -77,14 +77,6 @@
         </div>
     </div>
 
-    <footer class="admin-footer">
-        <div class="container text-center">
-            <p class="mb-0">
-                &copy; {{ date('Y') }} SENAI CIMATEC - Sistema de Oportunidades
-            </p>
-        </div>
-    </footer>
-
     <script src="{{ asset('assets/js/bootstrap.bundle.min.js') }}"></script>
     @stack('scripts')
 </body>

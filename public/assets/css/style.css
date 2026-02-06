@@ -627,39 +627,6 @@ body.admin-page {
     margin-bottom: 0;
 }
 
-/* Cores dos links rápidos */
-.dashboard-quick-link-primary {
-    border-color: #0077b6;
-}
-
-.dashboard-quick-link-primary .dashboard-quick-link-icon {
-    color: #0077b6;
-}
-
-.dashboard-quick-link-warning {
-    border-color: #fd7e14;
-}
-
-.dashboard-quick-link-warning .dashboard-quick-link-icon {
-    color: #fd7e14;
-}
-
-.dashboard-quick-link-secondary {
-    border-color: #6c757d;
-}
-
-.dashboard-quick-link-secondary .dashboard-quick-link-icon {
-    color: #6c757d;
-}
-
-.dashboard-quick-link-danger {
-    border-color: #dc3545;
-}
-
-.dashboard-quick-link-danger .dashboard-quick-link-icon {
-    color: #dc3545;
-}
-
 /* Ajustes para tabela do dashboard */
 .table-hover tbody tr:hover {
     background-color: rgba(0, 119, 182, 0.05);
