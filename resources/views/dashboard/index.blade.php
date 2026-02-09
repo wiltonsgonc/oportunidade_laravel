@@ -9,7 +9,6 @@
     <!-- Cards de estatísticas -->
     <div class="row g-4 mb-5">
 
-        
         <div class="col-md-4">
             <div class="stat-card stat-card-success">
                 <div class="stat-card-body">
@@ -24,7 +23,7 @@
                 </div>
             </div>
         </div>
-        
+
         <div class="col-md-4">
             <div class="stat-card stat-card-warning">
                 <div class="stat-card-body">
@@ -39,7 +38,7 @@
                 </div>
             </div>
         </div>
-        
+
         <div class="col-md-4">
             <div class="stat-card stat-card-info">
                 <div class="stat-card-body">
@@ -54,6 +53,18 @@
                 </div>
             </div>
         </div>
+    </div>
+
+    <div class="d-grid gap-2 d-md-block">
+        <a href="#" class="btn btn-primary">
+                <i class="bi bi-plus-circle me-1"></i> Cadastrar Vaga
+            </a>
+        <a href="#" class="btn btn-secondary">
+                <i class="bi bi-pencil me-1"></i> Editar Vaga
+            </a>
+        <a href="#" class="btn btn-danger">
+                <i class="bi bi-trash me-1"></i> Excluir Vaga
+            </a>
     </div>
 
     <!-- Últimas Vagas -->
@@ -83,15 +94,15 @@
                             </td>
                             <td>
                                 @if($vaga->status == 'aberto')
-                                    <span class="badge bg-success rounded-pill">
-                                        <i class="bi bi-check-circle me-1"></i>Aberto
-                                    </span>
+                                <span class="badge bg-success rounded-pill">
+                                    <i class="bi bi-check-circle me-1"></i>Aberto
+                                </span>
                                 @elseif($vaga->status == 'encerrado')
-                                    <span class="badge bg-danger rounded-pill">
-                                        <i class="bi bi-x-circle me-1"></i>Encerrado
-                                    </span>
+                                <span class="badge bg-danger rounded-pill">
+                                    <i class="bi bi-x-circle me-1"></i>Encerrado
+                                </span>
                                 @else
-                                    <span class="badge bg-secondary rounded-pill">{{ $vaga->status }}</span>
+                                <span class="badge bg-secondary rounded-pill">{{ $vaga->status }}</span>
                                 @endif
                             </td>
                             <td>
@@ -120,47 +131,43 @@
         <div class="card-body text-center py-5">
             <i class="bi bi-briefcase dashboard-empty-icon"></i>
             <h5 class="mt-3 text-muted">Nenhuma vaga cadastrada</h5>
-            <p class="text-muted">Comece cadastrando sua primeira vaga no sistema.</p>
-            <a href="#" class="btn btn-primary">
-                <i class="bi bi-plus-circle me-1"></i> Cadastrar Primeira Vaga
-            </a>
         </div>
     </div>
     @endif
- @endsection 
+    @endsection
 
-@push('scripts')
-<script>
-    document.addEventListener('DOMContentLoaded', function() {
-        // Atualizar hora atual no dashboard
-        function updateTime() {
-            const now = new Date();
-            const timeString = now.toLocaleTimeString('pt-BR', { 
-                hour: '2-digit', 
-                minute: '2-digit' 
-            });
-            const dateString = now.toLocaleDateString('pt-BR');
-            
-            const timeElement = document.getElementById('current-time');
-            if (timeElement) {
-                timeElement.textContent = `${dateString} ${timeString}`;
+    @push('scripts')
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Atualizar hora atual no dashboard
+            function updateTime() {
+                const now = new Date();
+                const timeString = now.toLocaleTimeString('pt-BR', {
+                    hour: '2-digit',
+                    minute: '2-digit'
+                });
+                const dateString = now.toLocaleDateString('pt-BR');
+
+                const timeElement = document.getElementById('current-time');
+                if (timeElement) {
+                    timeElement.textContent = `${dateString} ${timeString}`;
+                }
             }
-        }
-        
-        updateTime();
-        setInterval(updateTime, 60000);
-        
-        // Efeito hover nos cards
-        const statCards = document.querySelectorAll('.stat-card');
-        statCards.forEach(card => {
-            card.addEventListener('mouseenter', function() {
-                this.style.transform = 'translateY(-5px)';
-            });
-            
-            card.addEventListener('mouseleave', function() {
-                this.style.transform = 'translateY(0)';
+
+            updateTime();
+            setInterval(updateTime, 60000);
+
+            // Efeito hover nos cards
+            const statCards = document.querySelectorAll('.stat-card');
+            statCards.forEach(card => {
+                card.addEventListener('mouseenter', function() {
+                    this.style.transform = 'translateY(-5px)';
+                });
+
+                card.addEventListener('mouseleave', function() {
+                    this.style.transform = 'translateY(0)';
+                });
             });
         });
-    });
-</script>
-@endpush
+    </script>
+    @endpush
