@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Log;
 use App\Models\Vaga;
 use App\Models\SistemaLog;
 use App\Models\Usuario;
@@ -31,7 +32,7 @@ class DashboardController extends Controller
                 ]);
             } catch (\Exception $e) {
                 // Log do erro sem interromper o fluxo
-                \Log::error('Erro ao registrar log de acesso: ' . $e->getMessage());
+                Log::error('Erro ao registrar log de acesso: ' . $e->getMessage());
             }
         }
         
