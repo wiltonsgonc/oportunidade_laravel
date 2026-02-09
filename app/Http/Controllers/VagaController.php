@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Str;
 use App\Models\Vaga;
 
 class VagaController extends Controller
@@ -101,8 +102,7 @@ class VagaController extends Controller
         return str_replace('_', ' ', $nome);
     }
 
-    // VagaController.php - adicione este método
-
+    // Método de download corrigido
     public function download($tipo, $id)
     {
         $vaga = Vaga::findOrFail($id);
@@ -113,7 +113,7 @@ class VagaController extends Controller
                     abort(404, 'Edital não encontrado');
                 }
                 $path = storage_path('app/' . $vaga->arquivo_edital);
-                $nomeArquivo = 'edital_' . str_slug($vaga->edital) . '.pdf';
+                $nomeArquivo = 'edital_' . Str::slug($vaga->edital) . '.pdf'; // CORRIGIDO
                 break;
 
             case 'resultados':
@@ -121,7 +121,7 @@ class VagaController extends Controller
                     abort(404, 'Resultados não encontrados');
                 }
                 $path = storage_path('app/' . $vaga->arquivo_resultados);
-                $nomeArquivo = 'resultados_' . str_slug($vaga->edital) . '.pdf';
+                $nomeArquivo = 'resultados_' . Str::slug($vaga->edital) . '.pdf'; // CORRIGIDO
                 break;
 
             default:
