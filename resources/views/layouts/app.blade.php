@@ -33,7 +33,7 @@
                     @auth
                     <li class="nav-item">
                         <a class="nav-link" href="{{ route('dashboard') }}">
-                            <i class="bi bi-speedometer2 me-1"></i> Dashboard
+                            <i class="bi bi-house-dash me-1"></i> Dashboard
                         </a>
                     </li>
                     <li class="nav-item dropdown">
