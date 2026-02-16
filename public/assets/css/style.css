@@ -640,6 +640,33 @@ body.admin-page {
     letter-spacing: 0.5px;
 }
 
+.actions-area {
+    margin-bottom: 2rem;
+}
+
+.actions-area .card-header {
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: #333;
+    padding: 1rem 1.5rem;
+}
+
+.actions-area .card-body {
+    padding: 1.5rem;
+}
+
+.actions-area .btn {
+    white-space: nowrap;
+    padding: 0.5rem 1rem;
+    font-weight: 500;
+}
+
+@media (max-width: 768px) {
+    .actions-area .row > div {
+        margin-bottom: 0.75rem;
+    }
+}
+
 /* ================================================= */
 /* 11. RESPONSIVIDADE GERAL                         */
 /* ================================================= */
