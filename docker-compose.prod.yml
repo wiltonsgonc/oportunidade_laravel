@@ -25,7 +25,7 @@ services:
 
   # -------- Nginx --------
   webserver:
-    image: nginx:alpine
+    image: docker.io/library/nginx:alpine
     container_name: nginx_webserver
     restart: unless-stopped
     ports:
@@ -47,15 +47,15 @@ services:
 
   # -------- MySQL --------
   db:
-    image: mysql:8.0
+    image: docker.io/library/mysql:8.0
     container_name: mysql_db
     restart: unless-stopped
     # Porta NÃO exposta externamente em produção!
     environment:
-      MYSQL_DATABASE: ${DB_DATABASE:-laravel}
+      MYSQL_DATABASE: ${DB_DATABASE:-oportunidade}
       MYSQL_ROOT_PASSWORD: ${DB_ROOT_PASSWORD}
       MYSQL_PASSWORD: ${DB_PASSWORD}
-      MYSQL_USER: ${DB_USERNAME:-laravel}
+      MYSQL_USER: ${DB_USERNAME:-oportunidade}
     volumes:
       - dbdata:/var/lib/mysql
       - ./docker/mysql/my.cnf:/etc/mysql/conf.d/custom.cnf:ro
@@ -64,7 +64,7 @@ services:
 
   # -------- Redis (Cache/Sessions/Queues) --------
   redis:
-    image: redis:alpine
+    image: docker.io/library/redis:alpine
     container_name: redis_prod
     restart: unless-stopped
     command: redis-server --appendonly yes --requirepass ${REDIS_PASSWORD}
