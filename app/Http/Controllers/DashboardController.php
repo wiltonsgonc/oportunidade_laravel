@@ -76,8 +76,7 @@ class DashboardController extends Controller
         }
         
         $ultimasVagas = $queryUltimasVagas->orderBy('created_at', 'desc')
-                                         ->take(10)
-                                         ->get();
+                                         ->paginate(15);
         
         // ============ VAGAS EXPIRANDO EM BREVE ============
         $vagasExpirando = Vaga::where('status', 'aberto')

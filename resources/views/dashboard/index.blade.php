@@ -54,112 +54,108 @@
         </div>
     </div>
 
-<!-- Área do Menu de ações -->
-<div class="card shadow-sm mb-4">
-    <div class="card-header bg-white border-0 py-1">
-        <h5 class="mb-0">
-            <i class="bi bi-menu-button-wide me-2"></i>Menu de ações
-        </h5>
-    </div>
-    <div class="card-body py-3">
-        <div class="row g-3">
-            <div class="col-md-4 d-grid">
-                <a href="{{ route('vagas.create') }}" class="btn btn-primary btn-lg">
-                    <i class="bi bi-plus-circle me-1"></i> Nova Vaga
-                </a>
-            </div>
-            <div class="col-md-4 d-grid">
-                <a href="{{ route('vagas.para-editar') }}" class="btn btn-secondary btn-lg">
-                    <i class="bi bi-pencil me-1"></i> Editar Vaga
-                </a>
-            </div>
-            <div class="col-md-4 d-grid">
-                <a href="{{ route('vagas.para-excluir') }}" class="btn btn-danger btn-lg">
-                    <i class="bi bi-trash me-1"></i> Excluir Vaga
-                </a>
-            </div>
-        </div>
-    </div>
-</div>
-
-    <!-- Últimas Vagas - SIMPLIFICADA -->
-    @if($ultimasVagas->count() > 0)
+    <!-- Lista de Vagas com Ações -->
     <div class="card shadow-sm">
         <div class="card-header bg-white border-0 py-3">
             <div class="d-flex justify-content-between align-items-center">
                 <h5 class="mb-0">
-                    <i class="bi bi-clock me-2"></i>Últimas Vagas
+                    <i class="bi bi-list-ul me-2"></i>Vagas Cadastradas
                 </h5>
-                <a href="{{ route('vagas.index') }}" class="btn btn-sm btn-outline-secondary">
-                    Ver todas
-                </a>
+                <div>
+                    <a href="{{ route('vagas.create') }}" class="btn btn-primary btn-sm">
+                        <i class="bi bi-plus-circle me-1"></i> Nova Vaga
+                    </a>
+                </div>
             </div>
         </div>
         <div class="card-body p-0">
-            <div class="table-responsive">
-                <table class="table table-hover mb-0">
-                    <thead class="table-light">
-                        <tr>
-                            <th class="ps-4">Título</th>
-                            <th>Setor</th>
-                            <th>Status</th>
-                            <th class="text-end pe-4">Ações</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        @foreach($ultimasVagas as $vaga)
-                        <tr>
-                            <td class="ps-4">
-                                <strong>{{ Str::limit($vaga->titulo, 35) }}</strong>
-                            </td>
-                            <td>
-                                @if($vaga->setor == 'tecnologico')
-                                    <span class="badge bg-info">Tecnológico</span>
-                                @elseif($vaga->setor == 'graduacao')
-                                    <span class="badge bg-primary">Graduação</span>
-                                @else
-                                    <span class="badge bg-secondary">Pós/Pesquisa</span>
-                                @endif
-                            </td>
-                            <td>
-                                @if($vaga->status == 'aberto')
-                                    <span class="badge bg-success">Aberto</span>
-                                @else
-                                    <span class="badge bg-secondary">Encerrado</span>
-                                @endif
-                            </td>
-                            <td class="text-end pe-4">
-                                <div class="btn-group">
-                                    <a href="{{ route('vagas.show', $vaga->id) }}" class="btn btn-sm btn-outline-primary" title="Visualizar">
-                                        <i class="bi bi-eye"></i>
-                                    </a>
-                                    <a href="{{ route('vagas.edit', $vaga->id) }}" class="btn btn-sm btn-outline-warning" title="Editar">
-                                        <i class="bi bi-pencil"></i>
-                                    </a>
-                                </div>
-                            </td>
-                        </tr>
-                        @endforeach
-                    </tbody>
-                </table>
-            </div>
+            @if($ultimasVagas->count() > 0)
+                <div class="table-responsive">
+                    <table class="table table-hover mb-0">
+                        <thead class="table-light">
+                            <tr>
+                                <th class="ps-4">Edital</th>
+                                <th>Local</th>
+                                <th>Setor</th>
+                                <th>Status</th>
+                                <th>Data Limite</th>
+                                <th class="text-end pe-4">Ações</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach($ultimasVagas as $vaga)
+                            <tr>
+                                <td class="ps-4">
+                                    <strong>{{ Str::limit($vaga->edital, 40) }}</strong>
+                                </td>
+                                <td>
+                                    {{ $vaga->tipo ?? '-' }}
+                                </td>
+                                <td>
+                                    @if($vaga->setor == 'ÁREA TECNOLÓGICA SENAI CIMATEC')
+                                        <span class="badge bg-info">Tecnológico</span>
+                                    @elseif($vaga->setor == 'PRO-REITORIA DE GRADUAÇÃO')
+                                        <span class="badge bg-primary">Graduação</span>
+                                    @else
+                                        <span class="badge bg-secondary">Pós/Pesquisa</span>
+                                    @endif
+                                </td>
+                                <td>
+                                    @if($vaga->status == 'aberto')
+                                        <span class="badge bg-success">Aberto</span>
+                                    @else
+                                        <span class="badge bg-danger">Encerrado</span>
+                                    @endif
+                                </td>
+                                <td>
+                                    {{ $vaga->data_limite ? $vaga->data_limite->format('d/m/Y') : '-' }}
+                                </td>
+                                <td class="text-end pe-4">
+                                    <div class="btn-group" role="group">
+                                        <a href="{{ route('vagas.show', $vaga->id) }}" class="btn btn-sm btn-outline-primary" title="Visualizar">
+                                            <i class="bi bi-eye"></i>
+                                        </a>
+                                        <a href="{{ route('vagas.edit', $vaga->id) }}" class="btn btn-sm btn-outline-warning" title="Editar">
+                                            <i class="bi bi-pencil"></i>
+                                        </a>
+                                        <form action="{{ route('vagas.destroy', $vaga->id) }}" method="POST" class="d-inline"
+                                              onsubmit="return confirm('Tem certeza que deseja excluir esta vaga?')">
+                                            @csrf
+                                            @method('DELETE')
+                                            <button type="submit" class="btn btn-sm btn-outline-danger" title="Excluir">
+                                                <i class="bi bi-trash"></i>
+                                            </button>
+                                        </form>
+                                    </div>
+                                </td>
+                            </tr>
+                            @endforeach
+                        </tbody>
+                    </table>
+                </div>
+                
+                @if($ultimasVagas->hasPages())
+                <div class="card-footer bg-white border-top-0">
+                    {{ $ultimasVagas->links() }}
+                </div>
+                @endif
+            @else
+                <div class="text-center py-5">
+                    <i class="bi bi-briefcase fs-1 text-muted"></i>
+                    <h5 class="mt-3 text-muted">Nenhuma vaga cadastrada</h5>
+                    <a href="{{ route('vagas.create') }}" class="btn btn-primary mt-2">
+                        <i class="bi bi-plus-circle me-1"></i> Criar Primeira Vaga
+                    </a>
+                </div>
+            @endif
         </div>
     </div>
-    @else
-    <div class="card shadow-sm">
-        <div class="card-body text-center py-5">
-            <i class="bi bi-briefcase dashboard-empty-icon"></i>
-            <h5 class="mt-3 text-muted">Nenhuma vaga cadastrada</h5>
-        </div>
-    </div>
-    @endif
 </div>
 @endsection
 
 @push('scripts')
 <script>
     document.addEventListener('DOMContentLoaded', function() {
-        // Efeito hover nos cards de estatística
         const statCards = document.querySelectorAll('.stat-card');
         statCards.forEach(card => {
             card.addEventListener('mouseenter', function() {
