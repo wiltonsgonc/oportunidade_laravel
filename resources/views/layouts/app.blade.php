@@ -78,6 +78,8 @@
     </div>
 
     <script src="{{ asset('assets/js/bootstrap.bundle.min.js') }}"></script>
+    <script src="{{ asset('assets/js/sweetalert2.min.js') }}"></script>
+    <script src="{{ asset('assets/js/alert.js') }}"></script>
     @stack('scripts')
 </body>
 

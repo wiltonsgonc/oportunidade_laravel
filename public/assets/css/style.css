@@ -36,12 +36,6 @@ body {
 .btn-primary {
     background-color: #0077b6;
     border-color: #0077b6;
-    transition: background-color 0.3s;
-}
-
-.btn-primary:hover {
-    background-color: #005a8a;
-    border-color: #005a8a;
 }
 
 .bs-secondary-bg {
@@ -53,11 +47,7 @@ body {
 /* ================================================= */
 
 .card {
-    transition: transform 0.2s;
-}
-
-.card:hover {
-    transform: translateY(-5px);
+    transition: none;
 }
 
 .text-justify-custom {
@@ -264,12 +254,6 @@ body {
     border-color: #0077b6;
 }
 
-.btn-group .btn.btn-outline-primary:hover {
-    background-color: #0077b6;
-    border-color: #0077b6;
-    color: white;
-}
-
 /* Botões de status */
 .btn-group .btn-success {
     background-color: #28a745;
@@ -281,12 +265,6 @@ body {
     border-color: #28a745;
 }
 
-.btn-group .btn-outline-success:hover {
-    background-color: #28a745;
-    border-color: #28a745;
-    color: white;
-}
-
 .btn-group .btn-danger {
     background-color: #dc3545;
     border-color: #dc3545;
@@ -295,12 +273,6 @@ body {
 .btn-group .btn-outline-danger {
     color: #dc3545;
     border-color: #dc3545;
-}
-
-.btn-group .btn-outline-danger:hover {
-    background-color: #dc3545;
-    border-color: #dc3545;
-    color: white;
 }
 
 /* Estilos para texto dentro dos filtros */
@@ -338,12 +310,6 @@ body {
 .pagination .page-item.active .page-link {
     background-color: #0077b6;
     border-color: #0077b6;
-    color: white;
-}
-
-.pagination .page-link:hover {
-    background-color: #005a8a;
-    border-color: #005a8a;
     color: white;
 }
 
@@ -490,14 +456,9 @@ body.admin-page {
 .stat-card {
     border-radius: 10px;
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
-    transition: transform 0.3s, box-shadow 0.3s;
+    transition: none;
     overflow: hidden;
     height: 100%;
-}
-
-.stat-card:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.12);
 }
 
 .stat-card-body {
@@ -595,17 +556,10 @@ body.admin-page {
     border-radius: 10px;
     padding: 25px 15px;
     text-align: center;
-    transition: all 0.3s;
+    transition: none;
     background: white;
     color: #333;
     height: 100%;
-}
-
-.dashboard-quick-link:hover {
-    transform: translateY(-3px);
-    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
-    text-decoration: none;
-    color: #333;
 }
 
 .dashboard-quick-link button {
@@ -628,8 +582,8 @@ body.admin-page {
 }
 
 /* Ajustes para tabela do dashboard */
-.table-hover tbody tr:hover {
-    background-color: rgba(0, 119, 182, 0.05);
+.table-hover tbody tr {
+    background-color: transparent;
 }
 
 .table-light th {
@@ -784,11 +738,6 @@ body.admin-page {
     background-color: rgba(0, 0, 0, 0.02);
 }
 
-.table-hover tbody tr:hover {
-    background-color: rgba(0, 119, 182, 0.05) !important;
-    cursor: pointer;
-}
-
 /* Badges na tabela */
 .table td .badge {
     font-size: 11px;
@@ -847,12 +796,6 @@ body.admin-page {
 .pagination .page-item.active .page-link {
     background-color: #0077b6;
     border-color: #0077b6;
-    color: white;
-}
-
-.pagination .page-link:hover {
-    background-color: #005a8a;
-    border-color: #005a8a;
     color: white;
 }
 

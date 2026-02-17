@@ -58,14 +58,11 @@
                                 {{ $vaga->data_limite ? $vaga->data_limite->format('d/m/Y') : '-' }}
                             </td>
                             <td class="text-end pe-4">
-                                <form action="{{ route('vagas.destroy', $vaga->id) }}" method="POST" 
-                                      onsubmit="return confirm('Tem certeza que deseja excluir esta vaga?')">
-                                    @csrf
-                                    @method('DELETE')
-                                    <button type="submit" class="btn btn-sm btn-danger">
-                                        <i class="bi bi-trash me-1"></i> Excluir
-                                    </button>
-                                </form>
+                                <a href="{{ route('vagas.destroy', $vaga->id) }}" 
+                                   class="btn btn-sm btn-danger btn-delete"
+                                   onclick="event.preventDefault(); confirmarExclusao('{{ route('vagas.destroy', $vaga->id) }}', 'a vaga', '{{ addslashes($vaga->edital) }}');">
+                                    <i class="bi bi-trash me-1"></i> Excluir
+                                </a>
                             </td>
                         </tr>
                         @endforeach

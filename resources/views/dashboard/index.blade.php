@@ -111,21 +111,21 @@
                                     {{ $vaga->data_limite ? $vaga->data_limite->format('d/m/Y') : '-' }}
                                 </td>
                                 <td class="text-end pe-4">
-                                    <div class="btn-group" role="group">
-                                        <a href="{{ route('vagas.show', $vaga->id) }}" class="btn btn-sm btn-outline-primary" title="Visualizar">
+                                    <div class="btn-group btn-group-sm" role="group" aria-label="Ações">
+                                        <a href="{{ route('vagas.show', $vaga->id) }}" class="btn btn-outline-primary btn-sm" title="Visualizar">
                                             <i class="bi bi-eye"></i>
                                         </a>
-                                        <a href="{{ route('vagas.edit', $vaga->id) }}" class="btn btn-sm btn-outline-warning" title="Editar">
+                                        <a href="{{ route('vagas.edit', $vaga->id) }}" class="btn btn-outline-warning btn-sm" title="Editar">
                                             <i class="bi bi-pencil"></i>
                                         </a>
-                                        <form action="{{ route('vagas.destroy', $vaga->id) }}" method="POST" class="d-inline"
-                                              onsubmit="return confirm('Tem certeza que deseja excluir esta vaga?')">
-                                            @csrf
-                                            @method('DELETE')
-                                            <button type="submit" class="btn btn-sm btn-outline-danger" title="Excluir">
-                                                <i class="bi bi-trash"></i>
-                                            </button>
-                                        </form>
+                                        <a href="{{ route('vagas.destroy', $vaga->id) }}" 
+                                           class="btn btn-outline-danger btn-sm btn-delete" 
+                                           data-id="{{ $vaga->id }}" 
+                                           data-edital="{{ $vaga->edital }}"
+                                           onclick="event.preventDefault(); confirmarExclusao('{{ route('vagas.destroy', $vaga->id) }}', 'a vaga', '{{ addslashes($vaga->edital) }}');"
+                                           title="Excluir">
+                                            <i class="bi bi-trash"></i>
+                                        </a>
                                     </div>
                                 </td>
                             </tr>
@@ -153,18 +153,4 @@
 </div>
 @endsection
 
-@push('scripts')
-<script>
-    document.addEventListener('DOMContentLoaded', function() {
-        const statCards = document.querySelectorAll('.stat-card');
-        statCards.forEach(card => {
-            card.addEventListener('mouseenter', function() {
-                this.style.transform = 'translateY(-5px)';
-            });
-            card.addEventListener('mouseleave', function() {
-                this.style.transform = 'translateY(0)';
-            });
-        });
-    });
-</script>
-@endpush
+
