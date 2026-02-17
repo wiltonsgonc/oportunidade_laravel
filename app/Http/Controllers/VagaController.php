@@ -75,16 +75,16 @@ class VagaController extends Controller
                 if (!$vaga->arquivo_edital) {
                     abort(404, 'Edital não encontrado');
                 }
-                $path = storage_path('app/' . $vaga->arquivo_edital);
-                $nomeArquivo = 'edital_' . Str::slug($vaga->edital) . '.pdf';
+                $path = storage_path('app/public/' . $vaga->arquivo_edital);
+                $nomeArquivo = $vaga->nome_original_edital ?? 'edital_' . Str::slug($vaga->edital) . '.pdf';
                 break;
 
             case 'resultados':
                 if (!$vaga->arquivo_resultados) {
                     abort(404, 'Resultados não encontrados');
                 }
-                $path = storage_path('app/' . $vaga->arquivo_resultados);
-                $nomeArquivo = 'resultados_' . Str::slug($vaga->edital) . '.pdf';
+                $path = storage_path('app/public/' . $vaga->arquivo_resultados);
+                $nomeArquivo = $vaga->nome_original_resultados ?? 'resultados_' . Str::slug($vaga->edital) . '.pdf';
                 break;
 
             default:
@@ -92,7 +92,7 @@ class VagaController extends Controller
         }
 
         if (!file_exists($path)) {
-            abort(404, 'Arquivo não encontrado');
+            abort(404, 'Arquivo não encontrado no servidor');
         }
 
         return response()->download($path, $nomeArquivo);
@@ -202,18 +202,22 @@ class VagaController extends Controller
         // Processar upload de arquivos
         if ($request->hasFile('arquivo_edital')) {
             // Remover arquivo antigo se existir
-            if ($vaga->arquivo_edital) {
+            if ($vaga->arquivo_edital && $vaga->arquivo_edital !== '0') {
                 Storage::disk('public')->delete($vaga->arquivo_edital);
             }
             $validated['arquivo_edital'] = $request->file('arquivo_edital')->store('vagas/editais', 'public');
+            $validated['nome_original_edital'] = $request->file('arquivo_edital')->getClientOriginalName();
+            $validated['hash_edital'] = hash_file('sha256', $request->file('arquivo_edital')->getRealPath());
         }
 
         if ($request->hasFile('arquivo_resultados')) {
             // Remover arquivo antigo se existir
-            if ($vaga->arquivo_resultados) {
+            if ($vaga->arquivo_resultados && $vaga->arquivo_resultados !== '0') {
                 Storage::disk('public')->delete($vaga->arquivo_resultados);
             }
             $validated['arquivo_resultados'] = $request->file('arquivo_resultados')->store('vagas/resultados', 'public');
+            $validated['nome_original_resultados'] = $request->file('arquivo_resultados')->getClientOriginalName();
+            $validated['hash_resultados'] = hash_file('sha256', $request->file('arquivo_resultados')->getRealPath());
         }
 
         $vaga->update($validated);
