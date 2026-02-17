@@ -23,7 +23,6 @@ class Vaga extends Model
         'contato',
         'arquivo_edital',
         'arquivo_resultados',
-        'usuario_id', // Alterado de 'user_id' para 'usuario_id'
     ];
     
     protected $casts = [
@@ -39,6 +38,6 @@ class Vaga extends Model
      */
     public function usuario(): BelongsTo
     {
-        return $this->belongsTo(Usuario::class, 'usuario_id'); // Alterado para Usuario
+        return $this->belongsTo(Usuario::class, 'criado_por');
     }
 }

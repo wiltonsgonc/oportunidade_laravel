@@ -46,17 +46,17 @@ class DashboardController extends Controller
         
         // ============ ESTATÍSTICAS DO USUÁRIO ============
         $estatisticasUsuario = [
-            'total_vagas' => Vaga::where('usuario_id', $usuario->id)->count(),
-            'vagas_abertas' => Vaga::where('usuario_id', $usuario->id)
+            'total_vagas' => Vaga::where('criado_por', $usuario->id)->count(),
+            'vagas_abertas' => Vaga::where('criado_por', $usuario->id)
                                 ->where('status', 'aberto')
                                 ->count(),
-            'vagas_encerradas' => Vaga::where('usuario_id', $usuario->id)
+            'vagas_encerradas' => Vaga::where('criado_por', $usuario->id)
                                   ->where('status', 'encerrado')
                                   ->count(),
-            'vagas_semana' => Vaga::where('usuario_id', $usuario->id)
+            'vagas_semana' => Vaga::where('criado_por', $usuario->id)
                                 ->where('created_at', '>=', $dataAtual->copy()->subWeek())
                                 ->count(),
-            'vagas_mes' => Vaga::where('usuario_id', $usuario->id)
+            'vagas_mes' => Vaga::where('criado_por', $usuario->id)
                               ->where('created_at', '>=', $dataAtual->copy()->subMonth())
                               ->count(),
         ];
@@ -72,7 +72,7 @@ class DashboardController extends Controller
         $queryUltimasVagas = Vaga::with('usuario');
         
         if (!$usuario->is_admin) {
-            $queryUltimasVagas->where('usuario_id', $usuario->id);
+            $queryUltimasVagas->where('criado_por', $usuario->id);
         }
         
         $ultimasVagas = $queryUltimasVagas->orderBy('created_at', 'desc')
@@ -237,7 +237,7 @@ class DashboardController extends Controller
             $query = Vaga::whereBetween('created_at', [$inicioMes, $fimMes]);
             
             if ($usuarioId) {
-                $query->where('usuario_id', $usuarioId);
+                $query->where('criado_por', $usuarioId);
             }
             
             $vagasPorMes[] = [
@@ -260,7 +260,7 @@ class DashboardController extends Controller
             $query = Vaga::where('setor', $setor);
             
             if ($usuarioId) {
-                $query->where('usuario_id', $usuarioId);
+                $query->where('criado_por', $usuarioId);
             }
             
             $vagasPorSetor[] = [

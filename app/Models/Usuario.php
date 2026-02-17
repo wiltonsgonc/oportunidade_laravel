@@ -71,7 +71,7 @@ class Usuario extends Authenticatable
     // Vagas criadas pelo usuário
     public function vagasCriadas(): HasMany
     {
-        return $this->hasMany(Vaga::class, 'usuario_id');
+        return $this->hasMany(Vaga::class, 'criado_por');
     }
     
     // Auditorias realizadas pelo usuário

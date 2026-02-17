@@ -220,7 +220,7 @@ class VagaController extends Controller
 
     public function paraEditar()
     {
-        $vagas = Vaga::where('usuario_id', auth()->id()) // Alterado para 'usuario_id'
+        $vagas = Vaga::where('criado_por', auth()->id())
                     ->orderBy('created_at', 'desc')
                     ->paginate(10);
 
@@ -229,7 +229,7 @@ class VagaController extends Controller
 
     public function paraExcluir()
     {
-        $vagas = Vaga::where('usuario_id', auth()->id()) // Alterado para 'usuario_id'
+        $vagas = Vaga::where('criado_por', auth()->id())
                     ->orderBy('created_at', 'desc')
                     ->paginate(10);
 
