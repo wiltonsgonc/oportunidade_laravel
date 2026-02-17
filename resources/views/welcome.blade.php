@@ -26,13 +26,6 @@
                     Conecte-se ao Futuro: Editais, Bolsas e Programas
                 </span>
             </div>
-
-            <!-- Botão do admin -->
-            <div class="d-flex">
-                <a href="{{ route('login') }}" target="_blank" class="btn btn-primary text-nowrap bi bi-person">
-                    Área do Admin
-                </a>
-            </div>
         </div>
     </nav>
 
@@ -72,15 +65,15 @@
                     <div class="index-cta text-center mt-5 mb-5">
                         <h3 class="text-light mb-4">Escolha sua área de interesse:</h3>
                         <div class="d-grid gap-2 d-md-block">
-                            <a href="{{ url('/vagas?setor=GRADUACAO') }}" class="btn btn-primary btn-lg mb-2">
+                            <a href="{{ url('/vagas?setor=PRO-REITORIA DE GRADUAÇÃO') }}" class="btn btn-primary btn-lg mb-2">
                                 <i class="bi bi-mortarboard"></i> Graduação e Extensão
                             </a>
 
-                            <a href="{{ url('/vagas?setor=POS_PESQUISA') }}" class="btn btn-primary btn-lg mb-2">
+                            <a href="{{ url('/vagas?setor=PRO-REITORIA DE PÓS-GRADUAÇÃO E PESQUISA') }}" class="btn btn-primary btn-lg mb-2">
                                 <i class="bi bi-mortarboard-fill"></i> Pós-Graduação e Pesquisa
                             </a>
 
-                            <a href="{{ url('/vagas?setor=AREA_TECNOLOGICA') }}" class="btn btn-primary btn-lg mb-2">
+                            <a href="{{ url('/vagas?setor=ÁREA TECNOLÓGICA SENAI CIMATEC') }}" class="btn btn-primary btn-lg mb-2">
                                 <i class="bi bi-book"></i> Projetos de Inovação
                             </a>
                         </div>

@@ -25,13 +25,6 @@
                     Conecte-se ao Futuro: Editais, Bolsas e Programas
                 </span>
             </div>
-
-            <!-- Botão do admin -->
-            <div class="d-flex">
-                <a href="{{ route('login') }}" target="_blank" class="btn btn-primary text-nowrap bi bi-person">
-                    Área do Admin
-                </a>
-            </div>
         </div>
     </nav>
 
