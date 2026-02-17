@@ -1,7 +1,7 @@
-{{-- resources/views/vagas/para-excluir.blade.php --}}
+{{-- resources/views/vagas/editar.blade.php --}}
 @extends('layouts.app')
 
-@section('title', 'Excluir Vagas')
+@section('title', 'Editar Vagas')
 
 @section('content')
 <div class="container py-4">
@@ -9,9 +9,9 @@
     <div class="d-flex justify-content-between align-items-center mb-4">
         <div>
             <h1 class="h3 mb-0">
-                <i class="bi bi-trash me-2"></i>Excluir Vagas
+                <i class="bi bi-pencil me-2"></i>Editar Vagas
             </h1>
-            <p class="text-muted mb-0">Selecione uma vaga para excluir</p>
+            <p class="text-muted mb-0">Selecione uma vaga para editar</p>
         </div>
         <a href="{{ route('dashboard') }}" class="btn btn-outline-secondary">
             <i class="bi bi-arrow-left me-1"></i> Voltar
@@ -25,23 +25,23 @@
                 <table class="table table-hover mb-0">
                     <thead class="table-light">
                         <tr>
-                            <th class="ps-4">Título</th>
+                            <th class="ps-4">Edital</th>
                             <th>Setor</th>
                             <th>Status</th>
-                            <th>Criada em</th>
-                            <th class="text-end pe-4">Ação</th>
+                            <th>Data Limite</th>
+                            <th class="text-end pe-4">Ações</th>
                         </tr>
                     </thead>
                     <tbody>
                         @foreach($vagas as $vaga)
                         <tr>
                             <td class="ps-4">
-                                <strong>{{ Str::limit($vaga->titulo, 35) }}</strong>
+                                <strong>{{ Str::limit($vaga->edital, 35) }}</strong>
                             </td>
                             <td>
-                                @if($vaga->setor == 'tecnologico')
+                                @if($vaga->setor == 'ÁREA TECNOLÓGICA SENAI CIMATEC')
                                     <span class="badge bg-info">Tecnológico</span>
-                                @elseif($vaga->setor == 'graduacao')
+                                @elseif($vaga->setor == 'PRO-REITORIA DE GRADUAÇÃO')
                                     <span class="badge bg-primary">Graduação</span>
                                 @else
                                     <span class="badge bg-secondary">Pós/Pesquisa</span>
@@ -51,21 +51,16 @@
                                 @if($vaga->status == 'aberto')
                                     <span class="badge bg-success">Aberto</span>
                                 @else
-                                    <span class="badge bg-secondary">Encerrado</span>
+                                    <span class="badge bg-danger">Encerrado</span>
                                 @endif
                             </td>
                             <td>
-                                {{ $vaga->created_at->format('d/m/Y') }}
+                                {{ $vaga->data_limite ? $vaga->data_limite->format('d/m/Y') : '-' }}
                             </td>
                             <td class="text-end pe-4">
-                                <form action="{{ route('vagas.destroy', $vaga->id) }}" method="POST" 
-                                      onsubmit="return confirm('Tem certeza que deseja excluir esta vaga?')">
-                                    @csrf
-                                    @method('DELETE')
-                                    <button type="submit" class="btn btn-sm btn-danger">
-                                        <i class="bi bi-trash me-1"></i> Excluir
-                                    </button>
-                                </form>
+                                <a href="{{ route('vagas.edit', $vaga->id) }}" class="btn btn-sm btn-warning">
+                                    <i class="bi bi-pencil me-1"></i> Editar
+                                </a>
                             </td>
                         </tr>
                         @endforeach
@@ -73,7 +68,6 @@
                 </table>
             </div>
             
-            <!-- Paginação -->
             @if($vagas->hasPages())
             <div class="card-footer bg-white border-top-0">
                 {{ $vagas->links() }}
@@ -84,8 +78,8 @@
     @else
     <div class="card shadow-sm">
         <div class="card-body text-center py-5">
-            <i class="bi bi-briefcase dashboard-empty-icon"></i>
-            <h5 class="mt-3 text-muted">Nenhuma vaga disponível para exclusão</h5>
+            <i class="bi bi-briefcase fs-1 text-muted"></i>
+            <h5 class="mt-3 text-muted">Nenhuma vaga disponível para edição</h5>
             <p class="text-muted">Crie uma nova vaga para começar.</p>
             <a href="{{ route('vagas.create') }}" class="btn btn-primary">
                 <i class="bi bi-plus-circle me-1"></i> Criar Nova Vaga

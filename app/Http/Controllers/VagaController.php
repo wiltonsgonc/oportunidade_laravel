@@ -17,36 +17,38 @@ class VagaController extends Controller
         $setor = $request->query('setor');
         $status = $request->query('status', 'aberto');
 
-        // Consulta COM soft deletes - apenas registros não excluídos
         $query = Vaga::where('status', $status);
 
-        // Filtrar por setor se especificado
         if ($setor) {
-            $query->where('setor', $setor);
+            $setorNormalizado = trim(urldecode($setor));
+            $query->where('setor', 'LIKE', '%' . $setorNormalizado . '%');
         }
 
-        // Ordenar
         $query->orderBy('data_limite', $status === 'aberto' ? 'asc' : 'desc');
 
         $vagas = $query->paginate(12);
 
-        // Nome do setor para exibição
+        $setorNome = null;
+        $filtroClasse = 'filtro-padrao';
+        
         $setorNomes = [
-            'GRADUACAO' => 'Graduação e Extensão',
-            'POS_PESQUISA' => 'Pós-Graduação e Pesquisa',
-            'AREA_TECNOLOGICA' => 'Projetos de Inovação',
+            'PRO-REITORIA DE GRADUAÇÃO' => 'Graduação e Extensão',
+            'PRO-REITORIA DE PÓS-GRADUAÇÃO E PESQUISA' => 'Pós-Graduação e Pesquisa',
+            'ÁREA TECNOLÓGICA SENAI CIMATEC' => 'Projetos de Inovação',
         ];
 
-        $setorNome = $setorNomes[$setor] ?? null;
-
-        // Classe de filtro para background
-        $filtroClasses = [
-            'GRADUACAO' => 'filtro-graduacao',
-            'POS_PESQUISA' => 'filtro-pos-pesquisa',
-            'AREA_TECNOLOGICA' => 'filtro-tecnologico',
-        ];
-
-        $filtroClasse = $filtroClasses[$setor] ?? 'filtro-padrao';
+        foreach ($setorNomes as $key => $nome) {
+            if ($setor && str_contains($setorNormalizado, str_replace(' ', '', $key))) {
+                $setorNome = $nome;
+                $filtroClasses = [
+                    'PRO-REITORIA DE GRADUAÇÃO' => 'filtro-graduacao',
+                    'PRO-REITORIA DE PÓS-GRADUAÇÃO E PESQUISA' => 'filtro-pos-pesquisa',
+                    'ÁREA TECNOLÓGICA SENAI CIMATEC' => 'filtro-tecnologico',
+                ];
+                $filtroClasse = $filtroClasses[$key] ?? 'filtro-padrao';
+                break;
+            }
+        }
 
         return view('public.vagas.home', compact('vagas', 'setor', 'setorNome', 'status', 'filtroClasse'));
     }
@@ -100,40 +102,59 @@ class VagaController extends Controller
 
     public function create()
     {
-        return view('vagas.create');
+        return view('vagas.criar');
     }
 
     public function store(Request $request)
     {
         $validated = $request->validate([
-            'titulo' => 'required|string|max:255',
+            'edital' => 'required|string|max:500',
+            'setor' => 'required|string',
+            'tipo' => 'required|string',
+            'programa_curso_area' => 'required|string|max:500',
+            'email_responsavel' => 'required|email|max:255',
+            'data_limite' => 'required|date',
+            'numero_de_vagas' => 'required|integer|min:1',
+            'taxa_inscricao' => 'nullable|string|max:100',
+            'mensalidade_bolsa' => 'nullable|string|max:100',
+            'link_inscricao' => 'required|string|max:512',
             'descricao' => 'required|string',
-            'setor' => 'required|string|in:GRADUACAO,POS_PESQUISA,AREA_TECNOLOGICA',
-            'status' => 'required|string|in:aberto,encerrado',
-            'edital' => 'nullable|string|max:255',
-            'data_limite' => 'nullable|date',
-            'remuneracao' => 'nullable|string|max:100',
-            'vagas_disponiveis' => 'nullable|integer|min:0',
-            'requisitos' => 'nullable|string',
-            'contato' => 'nullable|string|max:255',
-            'arquivo_edital' => 'nullable|file|mimes:pdf,doc,docx|max:5120',
-            'arquivo_resultados' => 'nullable|file|mimes:pdf,doc,docx|max:5120',
+            'arquivo_edital' => 'required|file|mimes:pdf,doc,docx,odt|max:10240',
         ]);
 
-        // Processar upload de arquivos
-        if ($request->hasFile('arquivo_edital')) {
-            $validated['arquivo_edital'] = $request->file('arquivo_edital')->store('vagas/editais', 'public');
-        }
+        // Mapear campos do formulário para o banco
+        $dados = [
+            'edital' => $validated['edital'],
+            'setor' => $validated['setor'],
+            'tipo' => $validated['tipo'],
+            'programa_curso_area' => $validated['programa_curso_area'],
+            'email_responsavel' => $validated['email_responsavel'],
+            'data_limite' => $validated['data_limite'],
+            'numero_de_vagas' => $validated['numero_de_vagas'],
+            'taxa_inscricao' => $validated['taxa_inscricao'] ?? 'Não se aplica',
+            'mensalidade_bolsa' => $validated['mensalidade_bolsa'] ?? 'Não se aplica',
+            'link_inscricao' => $validated['link_inscricao'],
+            'descricao' => $validated['descricao'],
+            'status' => 'aberto',
+        ];
 
-        if ($request->hasFile('arquivo_resultados')) {
-            $validated['arquivo_resultados'] = $request->file('arquivo_resultados')->store('vagas/resultados', 'public');
+        // Processar upload do arquivo do edital
+        if ($request->hasFile('arquivo_edital')) {
+            $arquivo = $request->file('arquivo_edital');
+            $nomeOriginal = $arquivo->getClientOriginalName();
+            $hashEdital = hash_file('sha256', $arquivo->getRealPath());
+            $caminho = $arquivo->store('vagas/editais', 'public');
+            
+            $dados['arquivo_edital'] = $caminho;
+            $dados['nome_original_edital'] = $nomeOriginal;
+            $dados['hash_edital'] = $hashEdital;
         }
 
         // Adicionar usuário autenticado como criador
-        $validated['usuario_id'] = auth()->id(); // Alterado para 'usuario_id'
+        $dados['criado_por'] = auth()->id();
 
         // Criar vaga
-        Vaga::create($validated);
+        Vaga::create($dados);
 
         return redirect()->route('dashboard')
             ->with('success', 'Vaga cadastrada com sucesso!');
@@ -145,7 +166,7 @@ class VagaController extends Controller
         
         // Verificar se o usuário tem permissão para editar
         $usuario = auth()->user();
-        if ($vaga->usuario_id !== $usuario->id && !$usuario->is_admin) { // Alterado para usar is_admin do Usuario
+        if ($vaga->criado_por !== $usuario->id && !$usuario->is_admin) {
             abort(403, 'Você não tem permissão para editar esta vaga.');
         }
 
@@ -158,23 +179,24 @@ class VagaController extends Controller
         
         // Verificar se o usuário tem permissão para editar
         $usuario = auth()->user();
-        if ($vaga->usuario_id !== $usuario->id && !$usuario->is_admin) { // Alterado para usar is_admin do Usuario
+        if ($vaga->criado_por !== $usuario->id && !$usuario->is_admin) {
             abort(403, 'Você não tem permissão para editar esta vaga.');
         }
 
         $validated = $request->validate([
-            'titulo' => 'required|string|max:255',
+            'edital' => 'required|string|max:500',
+            'setor' => 'required|string',
+            'tipo' => 'required|string',
+            'programa_curso_area' => 'required|string|max:500',
+            'email_responsavel' => 'required|email|max:255',
+            'data_limite' => 'required|date',
+            'numero_de_vagas' => 'required|integer|min:1',
+            'taxa_inscricao' => 'nullable|string|max:100',
+            'mensalidade_bolsa' => 'nullable|string|max:100',
+            'link_inscricao' => 'required|string|max:512',
             'descricao' => 'required|string',
-            'setor' => 'required|string|in:GRADUACAO,POS_PESQUISA,AREA_TECNOLOGICA',
+            'arquivo_edital' => 'nullable|file|mimes:pdf,doc,docx,odt|max:10240',
             'status' => 'required|string|in:aberto,encerrado',
-            'edital' => 'nullable|string|max:255',
-            'data_limite' => 'nullable|date',
-            'remuneracao' => 'nullable|string|max:100',
-            'vagas_disponiveis' => 'nullable|integer|min:0',
-            'requisitos' => 'nullable|string',
-            'contato' => 'nullable|string|max:255',
-            'arquivo_edital' => 'nullable|file|mimes:pdf,doc,docx|max:5120',
-            'arquivo_resultados' => 'nullable|file|mimes:pdf,doc,docx|max:5120',
         ]);
 
         // Processar upload de arquivos
@@ -206,7 +228,7 @@ class VagaController extends Controller
         
         // Verificar se o usuário tem permissão para excluir
         $usuario = auth()->user();
-        if ($vaga->usuario_id !== $usuario->id && !$usuario->is_admin) { // Alterado para usar is_admin do Usuario
+        if ($vaga->criado_por !== $usuario->id && !$usuario->is_admin) {
             abort(403, 'Você não tem permissão para excluir esta vaga.');
         }
 
@@ -224,7 +246,7 @@ class VagaController extends Controller
                     ->orderBy('created_at', 'desc')
                     ->paginate(10);
 
-        return view('vagas.para-editar', compact('vagas'));
+        return view('vagas.editar', compact('vagas'));
     }
 
     public function paraExcluir()
@@ -233,7 +255,7 @@ class VagaController extends Controller
                     ->orderBy('created_at', 'desc')
                     ->paginate(10);
 
-        return view('vagas.para-excluir', compact('vagas'));
+        return view('vagas.excluir', compact('vagas'));
     }
 
     // ============ MÉTODOS ADMINISTRATIVOS ============

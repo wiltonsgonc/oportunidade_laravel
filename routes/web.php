@@ -24,7 +24,6 @@ Route::prefix('vagas')->group(function () {
     Route::get('/', [VagaController::class, 'index'])->name('vagas.index');
     Route::get('/setor/{setor}', [VagaController::class, 'bySetor'])->name('vagas.bySetor');
     Route::get('/download/{tipo}/{id}', [VagaController::class, 'download'])->name('vagas.download');
-    Route::get('/{id}', [VagaController::class, 'show'])->name('vagas.show');
 });
 
 // Autenticação
@@ -63,6 +62,9 @@ Route::middleware('auth')->group(function () {
         // Para ações do dashboard
         Route::get('/para-editar', [VagaController::class, 'paraEditar'])->name('vagas.para-editar');
         Route::get('/para-excluir', [VagaController::class, 'paraExcluir'])->name('vagas.para-excluir');
+        
+        // Visualizar
+        Route::get('/{id}', [VagaController::class, 'show'])->name('vagas.show');
         
         // Editar, Atualizar e Excluir
         Route::get('/{id}/edit', [VagaController::class, 'edit'])->name('vagas.edit');
