@@ -25,41 +25,29 @@
                     Conecte-se ao Futuro: Editais, Bolsas e Programas
                 </span>
             </div>
-
-            <!-- Botão do admin -->
-            <div class="d-flex">
-                <a href="{{ route('login') }}" target="_blank" class="btn btn-primary text-nowrap bi bi-person">
-                    Área do Admin
-                </a>
-            </div>
         </div>
     </nav>
 
     <!-- Detectar a classe de filtro -->
     @php
-    // Mapeamento de setores
     $setores_nomes = [
-        'GRADUACAO' => 'Graduação e Extensão',
-        'POS_PESQUISA' => 'Pós-Graduação e Pesquisa',
-        'AREA_TECNOLOGICA' => 'Projetos de Inovação',
+        'PRO-REITORIA DE GRADUAÇÃO' => 'Graduação e Extensão',
+        'PRO-REITORIA DE PÓS-GRADUAÇÃO E PESQUISA' => 'Pós-Graduação e Pesquisa',
+        'ÁREA TECNOLÓGICA SENAI CIMATEC' => 'Projetos de Inovação',
     ];
     
-    // Classes de filtro
     $filtro_classes = [
-        'GRADUACAO' => 'filtro-graduacao',
-        'POS_PESQUISA' => 'filtro-pos-pesquisa',
-        'AREA_TECNOLOGICA' => 'filtro-tecnologico',
+        'PRO-REITORIA DE GRADUAÇÃO' => 'filtro-graduacao',
+        'PRO-REITORIA DE PÓS-GRADUAÇÃO E PESQUISA' => 'filtro-pos-pesquisa',
+        'ÁREA TECNOLÓGICA SENAI CIMATEC' => 'filtro-tecnologico',
     ];
     
-    // Definir classe padrão
     $filtro_classe = 'filtro-padrao';
     
-    // Verificar se tem setor
     if (isset($setor) && isset($filtro_classes[$setor])) {
         $filtro_classe = $filtro_classes[$setor];
     }
     
-    // Se for vagas encerradas, usa padrão
     if (isset($status) && $status === 'encerrado') {
         $filtro_classe = 'filtro-padrao';
     }
@@ -107,20 +95,20 @@
                             </li>
                             <li><hr class="dropdown-divider"></li>
                             <li>
-                                <a class="dropdown-item {{ ($setor ?? '') == 'GRADUACAO' ? 'active fw-bold' : '' }}" 
-                                   href="{{ route('vagas.index', ['setor' => 'GRADUACAO', 'status' => $status ?? 'aberto']) }}">
+                                <a class="dropdown-item {{ ($setor ?? '') == 'PRO-REITORIA DE GRADUAÇÃO' ? 'active fw-bold' : '' }}" 
+                                   href="{{ route('vagas.index', ['setor' => 'PRO-REITORIA DE GRADUAÇÃO', 'status' => $status ?? 'aberto']) }}">
                                     Graduação e Extensão
                                 </a>
                             </li>
                             <li>
-                                <a class="dropdown-item {{ ($setor ?? '') == 'POS_PESQUISA' ? 'active fw-bold' : '' }}" 
-                                   href="{{ route('vagas.index', ['setor' => 'POS_PESQUISA', 'status' => $status ?? 'aberto']) }}">
+                                <a class="dropdown-item {{ ($setor ?? '') == 'PRO-REITORIA DE PÓS-GRADUAÇÃO E PESQUISA' ? 'active fw-bold' : '' }}" 
+                                   href="{{ route('vagas.index', ['setor' => 'PRO-REITORIA DE PÓS-GRADUAÇÃO E PESQUISA', 'status' => $status ?? 'aberto']) }}">
                                     Pós-Graduação e Pesquisa
                                 </a>
                             </li>
                             <li>
-                                <a class="dropdown-item {{ ($setor ?? '') == 'AREA_TECNOLOGICA' ? 'active fw-bold' : '' }}" 
-                                   href="{{ route('vagas.index', ['setor' => 'AREA_TECNOLOGICA', 'status' => $status ?? 'aberto']) }}">
+                                <a class="dropdown-item {{ ($setor ?? '') == 'ÁREA TECNOLÓGICA SENAI CIMATEC' ? 'active fw-bold' : '' }}" 
+                                   href="{{ route('vagas.index', ['setor' => 'ÁREA TECNOLÓGICA SENAI CIMATEC', 'status' => $status ?? 'aberto']) }}">
                                     Projetos de Inovação
                                 </a>
                             </li>
@@ -221,10 +209,11 @@
                                             <strong>Taxa de Inscrição:</strong>
                                             @php
                                                 $taxa_inscricao = $vaga->taxa_inscricao ?? '';
-                                                if (empty($taxa_inscricao) || floatval($taxa_inscricao) == 0) {
+                                                $taxa_valor = floatval(str_replace(',', '.', $taxa_inscricao));
+                                                if (empty($taxa_inscricao) || $taxa_valor == 0 || $taxa_inscricao == 'Não se aplica') {
                                                     echo 'Gratuito';
                                                 } else {
-                                                    echo 'R$ ' . number_format($taxa_inscricao, 2, ',', '.');
+                                                    echo 'R$ ' . number_format($taxa_valor, 2, ',', '.');
                                                 }
                                             @endphp
                                         </li>

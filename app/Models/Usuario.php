@@ -7,6 +7,7 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Usuario extends Authenticatable
 {
@@ -27,7 +28,6 @@ class Usuario extends Authenticatable
         'token_expira',
         'ultimo_login',
         'ip_ultimo_login'
-        // Remover 'email_verified_at' se a coluna não existir
     ];
 
     protected $hidden = [
@@ -42,7 +42,6 @@ class Usuario extends Authenticatable
         'ativo' => 'boolean',
         'token_expira' => 'datetime',
         'ultimo_login' => 'datetime'
-        // Remover 'email_verified_at' se a coluna não existir
     ];
 
     // Método para compatibilidade com Laravel Auth
@@ -67,18 +66,28 @@ class Usuario extends Authenticatable
         }
     }
 
-    // Relacionamentos
-    public function auditorias()
+    // ============ RELACIONAMENTOS ============
+    
+    // Vagas criadas pelo usuário
+    public function vagasCriadas(): HasMany
+    {
+        return $this->hasMany(Vaga::class, 'criado_por');
+    }
+    
+    // Auditorias realizadas pelo usuário
+    public function auditorias(): HasMany
     {
         return $this->hasMany(VagaAuditoria::class, 'usuario_id');
     }
 
-    public function logs()
+    // Logs do sistema gerados pelo usuário
+    public function logs(): HasMany
     {
         return $this->hasMany(SistemaLog::class, 'usuario_id');
     }
 
-    // Scopes
+    // ============ SCOPES ============
+    
     public function scopeAtivos($query)
     {
         return $query->where('ativo', true);
@@ -92,5 +101,42 @@ class Usuario extends Authenticatable
     public function scopePrincipais($query)
     {
         return $query->where('is_admin_principal', true);
+    }
+    
+    // ============ MÉTODOS UTILITÁRIOS ============
+    
+    public function getNomeCompletoAttribute()
+    {
+        return $this->nome;
+    }
+    
+    public function getIniciaisAttribute()
+    {
+        $nomes = explode(' ', $this->nome);
+        $iniciais = '';
+        
+        foreach ($nomes as $nome) {
+            if (!empty($nome)) {
+                $iniciais .= strtoupper(substr($nome, 0, 1));
+            }
+        }
+        
+        return substr($iniciais, 0, 2);
+    }
+    
+    public function getStatusFormatadoAttribute()
+    {
+        return $this->ativo ? 'Ativo' : 'Inativo';
+    }
+    
+    public function getTipoUsuarioAttribute()
+    {
+        if ($this->is_admin_principal) {
+            return 'Administrador Principal';
+        } elseif ($this->is_admin) {
+            return 'Administrador';
+        } else {
+            return 'Usuário';
+        }
     }
 }
