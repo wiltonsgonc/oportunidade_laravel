@@ -284,6 +284,43 @@
                                                 @endif
                                             </div>
                                         @endif
+
+                                        <!-- Retificações -->
+                                        @if($vaga->retificacoes && $vaga->retificacoes->count() > 0)
+                                            <div class="mt-2">
+                                                <small class="text-muted d-block mb-1">Retificação:</small>
+                                                @if($vaga->retificacoes->count() == 1)
+                                                    @php $retificacao = $vaga->retificacoes->first(); @endphp
+                                                    <a href="{{ route('vagas.download', ['tipo' => 'retificacao', 'id' => $retificacao->id]) }}" 
+                                                       target="_blank" class="btn btn-sm btn-outline-primary text-truncate d-inline-block" 
+                                                       style="max-width: 100%;" title="{{ $retificacao->nome_original }}">
+                                                        <i class="bi bi-file-earmark-text"></i> {{ Str::limit($retificacao->nome_original, 30) }}
+                                                    </a>
+                                                @else
+                                                    <div class="dropdown">
+                                                        <button class="btn btn-sm btn-outline-primary dropdown-toggle" 
+                                                                type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                                            <i class="bi bi-file-earmark-text"></i> Retificações ({{ $vaga->retificacoes->count() }})
+                                                        </button>
+                                                        <ul class="dropdown-menu dropdown-menu-end">
+                                                            @foreach($vaga->retificacoes as $retificacao)
+                                                                <li>
+                                                                    <a class="dropdown-item d-flex justify-content-between align-items-center" 
+                                                                       href="{{ route('vagas.download', ['tipo' => 'retificacao', 'id' => $retificacao->id]) }}" 
+                                                                       target="_blank">
+                                                                        <span class="text-truncate" style="max-width: 200px;" title="{{ $retificacao->nome_original }}">
+                                                                            <i class="bi bi-file-earmark-text me-1"></i>
+                                                                            {{ Str::limit($retificacao->nome_original, 25) }}
+                                                                        </span>
+                                                                        <i class="bi bi-download ms-2"></i>
+                                                                    </a>
+                                                                </li>
+                                                            @endforeach
+                                                        </ul>
+                                                    </div>
+                                                @endif
+                                            </div>
+                                        @endif
                                     </div>
                                 </div>
                             </div>

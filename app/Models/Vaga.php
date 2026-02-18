@@ -58,4 +58,12 @@ class Vaga extends Model
     {
         return $this->hasMany(VagaAnexo::class, 'vaga_id')->orderBy('created_at', 'desc');
     }
+
+    /**
+     * Retificações da vaga.
+     */
+    public function retificacoes()
+    {
+        return $this->hasMany(VagaRetificacao::class, 'vaga_id')->orderBy('created_at', 'desc');
+    }
 }

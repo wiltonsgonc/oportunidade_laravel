@@ -7,6 +7,7 @@ use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Storage;
 use App\Models\Vaga;
 use App\Models\VagaAnexo;
+use App\Models\VagaRetificacao;
 use App\Models\Usuario;
 
 class VagaController extends Controller
@@ -27,7 +28,7 @@ class VagaController extends Controller
 
         $query->orderBy('data_limite', $status === 'aberto' ? 'asc' : 'desc');
 
-        $vagas = $query->with('anexos')->paginate(12);
+        $vagas = $query->with(['anexos', 'retificacoes'])->paginate(12);
 
         $setorNome = null;
         $filtroClasse = 'filtro-padrao';
@@ -126,6 +127,20 @@ class VagaController extends Controller
                 return response()->file($path, [
                     'Content-Type' => $mimeType,
                     'Content-Disposition' => 'inline; filename="' . $nomeOriginal . '"'
+                ]);
+
+            case 'retificacao':
+                $retificacao = VagaRetificacao::findOrFail($id);
+                $path = storage_path('app/public/' . $retificacao->nome_arquivo);
+                
+                if (!file_exists($path)) {
+                    abort(404, 'Arquivo não encontrado no servidor');
+                }
+                
+                $mimeType = mime_content_type($path);
+                return response()->file($path, [
+                    'Content-Type' => $mimeType,
+                    'Content-Disposition' => 'inline; filename="' . $retificacao->nome_original . '"'
                 ]);
 
             default:

@@ -3,6 +3,7 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\VagaController;
 use App\Http\Controllers\AnexoController;
+use App\Http\Controllers\RetificacaoController;
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\DashboardController;
 
@@ -70,6 +71,13 @@ Route::middleware('auth')->group(function () {
         // Upload e exclusão de anexos (controlador separado)
         Route::post('/{id}/anexo', [AnexoController::class, 'upload'])->name('vagas.upload-anexo');
         Route::delete('/{id}/anexo/{anexoId}', [AnexoController::class, 'excluir'])->name('vagas.excluir-anexo');
+        
+        // Página de retificações
+        Route::get('/{id}/retificacoes', [RetificacaoController::class, 'index'])->name('vagas.retificacoes');
+        
+        // Upload e exclusão de retificações (controlador separado)
+        Route::post('/{id}/retificacao', [RetificacaoController::class, 'upload'])->name('vagas.upload-retificacao');
+        Route::delete('/{id}/retificacao/{retificacaoId}', [RetificacaoController::class, 'excluir'])->name('vagas.excluir-retificacao');
         
         // Excluir arquivo (edital/resultados)
         Route::delete('/{id}/arquivo/{tipo}', [VagaController::class, 'excluirArquivo'])->name('vagas.excluir-arquivo');

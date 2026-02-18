@@ -121,6 +121,9 @@
                                         <a href="{{ route('vagas.anexos', $vaga->id) }}" class="btn btn-outline-info btn-sm" title="Anexos">
                                             <i class="bi bi-paperclip"></i>
                                         </a>
+                                        <a href="{{ route('vagas.retificacoes', $vaga->id) }}" class="btn btn-outline-primary btn-sm" title="Retificações">
+                                            <i class="bi bi-file-earmark-text"></i>
+                                        </a>
                                         <a href="{{ route('vagas.destroy', $vaga->id) }}" 
                                            class="btn btn-outline-danger btn-sm btn-delete" 
                                            data-id="{{ $vaga->id }}" 
