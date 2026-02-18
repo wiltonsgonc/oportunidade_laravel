@@ -218,6 +218,39 @@
                                 @enderror
                             </div>
 
+                            <!-- Arquivo de Resultados -->
+                            <div class="col-md-6">
+                                <label for="arquivo_resultados" class="form-label">Arquivo de Resultados</label>
+                                @if($vaga->nome_original_resultados && $vaga->arquivo_resultados && $vaga->arquivo_resultados !== '0')
+                                    <div class="mb-2 p-3 border rounded bg-light">
+                                        <div class="d-flex justify-content-between align-items-center">
+                                            <div>
+                                                <i class="bi bi-file-earmark-pdf text-success fs-4"></i>
+                                                <span class="ms-2">{{ $vaga->nome_original_resultados }}</span>
+                                            </div>
+                                            <div class="btn-group btn-group-sm">
+                                                <a href="{{ route('vagas.download', ['tipo' => 'resultados', 'id' => $vaga->id]) }}" 
+                                                   target="_blank" class="btn btn-outline-primary" title="Visualizar">
+                                                    <i class="bi bi-eye"></i>
+                                                </a>
+                                                <button type="button" class="btn btn-outline-danger" 
+                                                        onclick="confirmarExclusaoArquivo('{{ route('vagas.excluir-arquivo', ['id' => $vaga->id, 'tipo' => 'resultados']) }}', 'resultados')"
+                                                        title="Excluir">
+                                                    <i class="bi bi-trash"></i>
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                @endif
+                                <input type="file" class="form-control @error('arquivo_resultados') is-invalid @enderror" 
+                                       id="arquivo_resultados" name="arquivo_resultados" 
+                                       accept=".pdf,.doc,.docx,.odt">
+                                <div class="form-text">Deixe em branco para manter o atual. PDF, DOC, DOCX, ODT (Max: 10MB)</div>
+                                @error('arquivo_resultados')
+                                    <div class="invalid-feedback">{{ $message }}</div>
+                                @enderror
+                            </div>
+
                             <!-- Link de Inscrição -->
                             <div class="col-md-6">
                                 <label for="link_inscricao" class="form-label">
