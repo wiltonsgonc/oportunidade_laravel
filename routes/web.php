@@ -2,6 +2,7 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\VagaController;
+use App\Http\Controllers\AnexoController;
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\DashboardController;
 
@@ -63,9 +64,12 @@ Route::middleware('auth')->group(function () {
         Route::get('/para-editar', [VagaController::class, 'paraEditar'])->name('vagas.para-editar');
         Route::get('/para-excluir', [VagaController::class, 'paraExcluir'])->name('vagas.para-excluir');
         
-        // Upload e exclusão de anexos (antes das rotas com parâmetro)
-        Route::post('/{id}/anexo', [VagaController::class, 'uploadAnexo'])->name('vagas.upload-anexo');
-        Route::delete('/{id}/anexo/{anexoId}', [VagaController::class, 'excluirAnexo'])->name('vagas.excluir-anexo');
+        // Página de anexos
+        Route::get('/{id}/anexos', [VagaController::class, 'anexos'])->name('vagas.anexos');
+        
+        // Upload e exclusão de anexos (controlador separado)
+        Route::post('/{id}/anexo', [AnexoController::class, 'upload'])->name('vagas.upload-anexo');
+        Route::delete('/{id}/anexo/{anexoId}', [AnexoController::class, 'excluir'])->name('vagas.excluir-anexo');
         
         // Excluir arquivo (edital/resultados)
         Route::delete('/{id}/arquivo/{tipo}', [VagaController::class, 'excluirArquivo'])->name('vagas.excluir-arquivo');
