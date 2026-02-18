@@ -766,6 +766,18 @@ body.admin-page {
     font-size: 14px;
 }
 
+.btn-group .btn-outline-primary:hover {
+    background-color: #0077b6;
+    border-color: #0077b6;
+    color: #fff;
+}
+
+.btn-group .btn-outline-warning:hover {
+    background-color: #ffc107;
+    border-color: #ffc107;
+    color: #000;
+}
+
 /* Documentos na tabela */
 .d-flex.flex-column.gap-1 {
     gap: 4px !important;
