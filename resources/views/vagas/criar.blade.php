@@ -31,12 +31,6 @@
                 </div>
             @endif
 
-            @if(session('success'))
-                <div class="alert alert-success">
-                    {{ session('success') }}
-                </div>
-            @endif
-
             <!-- Formulário -->
             <div class="card shadow-sm">
                 <div class="card-body p-4">

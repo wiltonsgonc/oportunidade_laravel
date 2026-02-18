@@ -118,6 +118,9 @@
                                         <a href="{{ route('vagas.edit', $vaga->id) }}" class="btn btn-outline-warning btn-sm" title="Editar">
                                             <i class="bi bi-pencil"></i>
                                         </a>
+                                        <a href="{{ route('vagas.anexos', $vaga->id) }}" class="btn btn-outline-info btn-sm" title="Anexos">
+                                            <i class="bi bi-paperclip"></i>
+                                        </a>
                                         <a href="{{ route('vagas.destroy', $vaga->id) }}" 
                                            class="btn btn-outline-danger btn-sm btn-delete" 
                                            data-id="{{ $vaga->id }}" 

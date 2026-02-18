@@ -188,11 +188,25 @@
                             <!-- Arquivo do Edital -->
                             <div class="col-md-6">
                                 <label for="arquivo_edital" class="form-label">Arquivo do Edital</label>
-                                @if($vaga->arquivo_edital)
-                                    <div class="mb-2">
-                                        <span class="badge bg-success">
-                                            <i class="bi bi-file-earmark"></i> Arquivo existente
-                                        </span>
+                                @if($vaga->nome_original_edital && $vaga->arquivo_edital && $vaga->arquivo_edital !== '0')
+                                    <div class="mb-2 p-3 border rounded bg-light">
+                                        <div class="d-flex justify-content-between align-items-center">
+                                            <div>
+                                                <i class="bi bi-file-earmark-pdf text-danger fs-4"></i>
+                                                <span class="ms-2">{{ $vaga->nome_original_edital }}</span>
+                                            </div>
+                                            <div class="btn-group btn-group-sm">
+                                                <a href="{{ route('vagas.download', ['tipo' => 'edital', 'id' => $vaga->id]) }}" 
+                                                   target="_blank" class="btn btn-outline-primary" title="Visualizar">
+                                                    <i class="bi bi-eye"></i>
+                                                </a>
+                                                <button type="button" class="btn btn-outline-danger" 
+                                                        onclick="confirmarExclusaoArquivo('{{ route('vagas.excluir-arquivo', ['id' => $vaga->id, 'tipo' => 'edital']) }}', 'edital')"
+                                                        title="Excluir">
+                                                    <i class="bi bi-trash"></i>
+                                                </button>
+                                            </div>
+                                        </div>
                                     </div>
                                 @endif
                                 <input type="file" class="form-control @error('arquivo_edital') is-invalid @enderror" 
@@ -243,6 +257,8 @@
                             </div>
                         </div>
                     </form>
+
+                    </div>
                 </div>
             </div>
         </div>
@@ -286,6 +302,8 @@ document.addEventListener('DOMContentLoaded', function() {
         
         tipoSelect.disabled = locais.length === 0;
     });
+
+    // Upload de anexos via AJAX com barra de progresso
 });
 </script>
 @endpush

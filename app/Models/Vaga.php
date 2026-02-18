@@ -50,4 +50,12 @@ class Vaga extends Model
     {
         return $this->belongsTo(Usuario::class, 'criado_por');
     }
+
+    /**
+     * Anexos da vaga.
+     */
+    public function anexos()
+    {
+        return $this->hasMany(VagaAnexo::class, 'vaga_id')->orderBy('created_at', 'desc');
+    }
 }

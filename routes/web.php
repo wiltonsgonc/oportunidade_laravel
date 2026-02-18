@@ -2,6 +2,7 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\VagaController;
+use App\Http\Controllers\AnexoController;
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\DashboardController;
 
@@ -62,6 +63,19 @@ Route::middleware('auth')->group(function () {
         // Para ações do dashboard
         Route::get('/para-editar', [VagaController::class, 'paraEditar'])->name('vagas.para-editar');
         Route::get('/para-excluir', [VagaController::class, 'paraExcluir'])->name('vagas.para-excluir');
+        
+        // Página de anexos
+        Route::get('/{id}/anexos', [VagaController::class, 'anexos'])->name('vagas.anexos');
+        
+        // Upload e exclusão de anexos (controlador separado)
+        Route::post('/{id}/anexo', [AnexoController::class, 'upload'])->name('vagas.upload-anexo');
+        Route::delete('/{id}/anexo/{anexoId}', [AnexoController::class, 'excluir'])->name('vagas.excluir-anexo');
+        
+        // Excluir arquivo (edital/resultados)
+        Route::delete('/{id}/arquivo/{tipo}', [VagaController::class, 'excluirArquivo'])->name('vagas.excluir-arquivo');
+        
+        // Download (genérico para editais, resultados e anexos)
+        Route::get('/download/{tipo}/{id}', [VagaController::class, 'download'])->name('vagas.download');
         
         // Visualizar
         Route::get('/{id}', [VagaController::class, 'show'])->name('vagas.show');
