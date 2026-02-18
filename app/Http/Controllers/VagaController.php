@@ -164,6 +164,8 @@ class VagaController extends Controller
             unlink($caminho);
         }
 
+        $this->limparArquivosOrfaos();
+
         $vaga->update([
             $campoArquivo => null,
             $campoNomeOriginal => null,
@@ -171,6 +173,41 @@ class VagaController extends Controller
         ]);
 
         return back()->with('success', 'Arquivo do ' . $tipo . ' excluído com sucesso.');
+    }
+
+    private function limparArquivosOrfaos()
+    {
+        $diretorio = storage_path('app/public/vagas/editais');
+        if (!is_dir($diretorio)) {
+            return;
+        }
+
+        $arquivosNoDiretorio = glob($diretorio . '/*');
+        
+        $vagas = Vaga::whereNotNull('arquivo_edital')
+            ->where('arquivo_edital', '!=', '0')
+            ->orWhereNotNull('arquivo_resultados')
+            ->where('arquivo_resultados', '!=', '0')
+            ->get();
+
+        $arquivosUsados = [];
+        foreach ($vagas as $vaga) {
+            if ($vaga->arquivo_edital && $vaga->arquivo_edital !== '0') {
+                $arquivosUsados[] = $vaga->arquivo_edital;
+            }
+            if ($vaga->arquivo_resultados && $vaga->arquivo_resultados !== '0') {
+                $arquivosUsados[] = $vaga->arquivo_resultados;
+            }
+        }
+
+        foreach ($arquivosNoDiretorio as $arquivo) {
+            if (is_file($arquivo)) {
+                $nomeArquivo = basename($arquivo);
+                if (!in_array('vagas/editais/' . $nomeArquivo, $arquivosUsados)) {
+                    unlink($arquivo);
+                }
+            }
+        }
     }
 
     // ============ MÉTODOS DE CRUD (AUTENTICADOS) ============
@@ -297,6 +334,8 @@ class VagaController extends Controller
 
         $vaga->update($validated);
 
+        $this->limparArquivosOrfaos();
+
         return redirect()->route('dashboard')
             ->with('success', 'Vaga atualizada com sucesso!');
     }
@@ -379,6 +418,8 @@ class VagaController extends Controller
         }
 
         $vaga->forceDelete();
+
+        $this->limparArquivosOrfaos();
 
         return redirect()->back()->with('success', 'Vaga excluída permanentemente!');
     }
