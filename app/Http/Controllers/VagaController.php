@@ -78,20 +78,30 @@ class VagaController extends Controller
                 }
                 $path = null;
                 $arquivo = $vaga->arquivo_edital;
-                if ($arquivo && $arquivo !== '0' && file_exists(storage_path('app/public/' . $arquivo))) {
+                if ($arquivo && $arquivo !== '0') {
                     $path = storage_path('app/public/' . $arquivo);
                 }
-                if (!$path) {
-                    $files = glob(storage_path('app/public/vagas/editais/*' . $nomeOriginal));
+                if (!$path || !file_exists($path)) {
+                    $files = glob(storage_path('app/public/vagas/editais/*.pdf'));
                     if (!empty($files)) {
                         $path = $files[0];
                     }
                 }
-                if (!$path) {
+                if (!$path || !file_exists($path)) {
+                    $files = glob(storage_path('app/public/vagas/editais/*'));
+                    if (!empty($files)) {
+                        $path = $files[0];
+                    }
+                }
+                if (!$path || !file_exists($path)) {
                     abort(404, 'Arquivo não encontrado no servidor');
                 }
-                $nomeArquivo = $nomeOriginal;
-                break;
+                
+                $mimeType = mime_content_type($path);
+                return response()->file($path, [
+                    'Content-Type' => $mimeType,
+                    'Content-Disposition' => 'inline; filename="' . $nomeOriginal . '"'
+                ]);
 
             case 'resultados':
                 $nomeOriginal = $vaga->nome_original_resultados;
@@ -100,26 +110,34 @@ class VagaController extends Controller
                 }
                 $path = null;
                 $arquivo = $vaga->arquivo_resultados;
-                if ($arquivo && $arquivo !== '0' && file_exists(storage_path('app/public/' . $arquivo))) {
+                if ($arquivo && $arquivo !== '0') {
                     $path = storage_path('app/public/' . $arquivo);
                 }
-                if (!$path) {
-                    $files = glob(storage_path('app/public/vagas/editais/*' . $nomeOriginal));
+                if (!$path || !file_exists($path)) {
+                    $files = glob(storage_path('app/public/vagas/editais/*.pdf'));
                     if (!empty($files)) {
                         $path = $files[0];
                     }
                 }
-                if (!$path) {
+                if (!$path || !file_exists($path)) {
+                    $files = glob(storage_path('app/public/vagas/editais/*'));
+                    if (!empty($files)) {
+                        $path = $files[0];
+                    }
+                }
+                if (!$path || !file_exists($path)) {
                     abort(404, 'Arquivo não encontrado no servidor');
                 }
-                $nomeArquivo = $nomeOriginal;
-                break;
+                
+                $mimeType = mime_content_type($path);
+                return response()->file($path, [
+                    'Content-Type' => $mimeType,
+                    'Content-Disposition' => 'inline; filename="' . $nomeOriginal . '"'
+                ]);
 
             default:
                 abort(404, 'Tipo de download inválido');
         }
-
-        return response()->file($path);
     }
 
     public function excluirArquivo($id, $tipo)
