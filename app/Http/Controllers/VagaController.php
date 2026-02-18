@@ -72,30 +72,87 @@ class VagaController extends Controller
 
         switch ($tipo) {
             case 'edital':
-                if (!$vaga->arquivo_edital) {
+                $nomeOriginal = $vaga->nome_original_edital;
+                if (!$nomeOriginal) {
                     abort(404, 'Edital não encontrado');
                 }
-                $path = storage_path('app/public/' . $vaga->arquivo_edital);
-                $nomeArquivo = $vaga->nome_original_edital ?? 'edital_' . Str::slug($vaga->edital) . '.pdf';
+                $path = null;
+                $arquivo = $vaga->arquivo_edital;
+                if ($arquivo && $arquivo !== '0' && file_exists(storage_path('app/public/' . $arquivo))) {
+                    $path = storage_path('app/public/' . $arquivo);
+                }
+                if (!$path) {
+                    $files = glob(storage_path('app/public/vagas/editais/*' . $nomeOriginal));
+                    if (!empty($files)) {
+                        $path = $files[0];
+                    }
+                }
+                if (!$path) {
+                    abort(404, 'Arquivo não encontrado no servidor');
+                }
+                $nomeArquivo = $nomeOriginal;
                 break;
 
             case 'resultados':
-                if (!$vaga->arquivo_resultados) {
+                $nomeOriginal = $vaga->nome_original_resultados;
+                if (!$nomeOriginal) {
                     abort(404, 'Resultados não encontrados');
                 }
-                $path = storage_path('app/public/' . $vaga->arquivo_resultados);
-                $nomeArquivo = $vaga->nome_original_resultados ?? 'resultados_' . Str::slug($vaga->edital) . '.pdf';
+                $path = null;
+                $arquivo = $vaga->arquivo_resultados;
+                if ($arquivo && $arquivo !== '0' && file_exists(storage_path('app/public/' . $arquivo))) {
+                    $path = storage_path('app/public/' . $arquivo);
+                }
+                if (!$path) {
+                    $files = glob(storage_path('app/public/vagas/editais/*' . $nomeOriginal));
+                    if (!empty($files)) {
+                        $path = $files[0];
+                    }
+                }
+                if (!$path) {
+                    abort(404, 'Arquivo não encontrado no servidor');
+                }
+                $nomeArquivo = $nomeOriginal;
                 break;
 
             default:
                 abort(404, 'Tipo de download inválido');
         }
 
-        if (!file_exists($path)) {
-            abort(404, 'Arquivo não encontrado no servidor');
+        return response()->file($path);
+    }
+
+    public function excluirArquivo($id, $tipo)
+    {
+        $vaga = Vaga::findOrFail($id);
+        $usuario = auth()->user();
+
+        if ($vaga->criado_por !== $usuario->id && !$usuario->is_admin) {
+            abort(403, 'Você não tem permissão para excluir arquivos desta vaga.');
         }
 
-        return response()->download($path, $nomeArquivo);
+        $campoArquivo = 'arquivo_' . $tipo;
+        $campoNomeOriginal = 'nome_original_' . $tipo;
+        $campoHash = 'hash_' . $tipo;
+
+        if (!$vaga->$campoArquivo || $vaga->$campoArquivo === '0') {
+            return back()->with('error', 'Arquivo não encontrado.');
+        }
+
+        $arquivo = $vaga->$campoArquivo;
+        $caminho = storage_path('app/public/' . $arquivo);
+        
+        if (file_exists($caminho)) {
+            unlink($caminho);
+        }
+
+        $vaga->update([
+            $campoArquivo => null,
+            $campoNomeOriginal => null,
+            $campoHash => null,
+        ]);
+
+        return back()->with('success', 'Arquivo do ' . $tipo . ' excluído com sucesso.');
     }
 
     // ============ MÉTODOS DE CRUD (AUTENTICADOS) ============

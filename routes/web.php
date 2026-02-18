@@ -63,6 +63,9 @@ Route::middleware('auth')->group(function () {
         Route::get('/para-editar', [VagaController::class, 'paraEditar'])->name('vagas.para-editar');
         Route::get('/para-excluir', [VagaController::class, 'paraExcluir'])->name('vagas.para-excluir');
         
+        // Excluir arquivo
+        Route::delete('/{id}/arquivo/{tipo}', [VagaController::class, 'excluirArquivo'])->name('vagas.excluir-arquivo');
+        
         // Visualizar
         Route::get('/{id}', [VagaController::class, 'show'])->name('vagas.show');
         

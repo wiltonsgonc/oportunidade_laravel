@@ -15,6 +15,42 @@ function confirmarExclusao(urlDestino, tipoItem, nomeItem) {
     });
 }
 
+function confirmarExclusaoArquivo(url, tipoArquivo) {
+    const csrfToken = document.querySelector('meta[name="csrf-token"]')?.content || "";
+
+    Swal.fire({
+        title: 'Confirmar Exclusão',
+        html: `Tem certeza que deseja excluir o arquivo do <strong>${tipoArquivo}</strong>?<br>Esta ação não pode ser desfeita.`,
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#d33',
+        cancelButtonColor: '#6c757d',
+        confirmButtonText: 'Sim, excluir!',
+        cancelButtonText: 'Cancelar'
+    }).then((result) => {
+        if (result.isConfirmed) {
+            const form = document.createElement("form");
+            form.method = "POST";
+            form.action = url;
+
+            const csrfInput = document.createElement("input");
+            csrfInput.type = "hidden";
+            csrfInput.name = "_token";
+            csrfInput.value = csrfToken;
+
+            const methodInput = document.createElement("input");
+            methodInput.type = "hidden";
+            methodInput.name = "_method";
+            methodInput.value = "DELETE";
+
+            form.appendChild(csrfInput);
+            form.appendChild(methodInput);
+            document.body.appendChild(form);
+            form.submit();
+        }
+    });
+}
+
 function confirmarExclusaoComCSRF(url, id, tipo, nome) {
     const csrfToken = document.querySelector('meta[name="csrf-token"]')?.content || "";
 
@@ -77,6 +113,7 @@ function testarSweetAlert() {
 }
 
 window.confirmarExclusao = confirmarExclusao;
+window.confirmarExclusaoArquivo = confirmarExclusaoArquivo;
 window.confirmarExclusaoComCSRF = confirmarExclusaoComCSRF;
 window.confirmarExclusaoAnexo = confirmarExclusaoAnexo;
 window.testarSweetAlert = testarSweetAlert;
