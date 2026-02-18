@@ -82,19 +82,7 @@ class VagaController extends Controller
                     $path = storage_path('app/public/' . $arquivo);
                 }
                 if (!$path || !file_exists($path)) {
-                    $files = glob(storage_path('app/public/vagas/editais/*.pdf'));
-                    if (!empty($files)) {
-                        $path = $files[0];
-                    }
-                }
-                if (!$path || !file_exists($path)) {
-                    $files = glob(storage_path('app/public/vagas/editais/*'));
-                    if (!empty($files)) {
-                        $path = $files[0];
-                    }
-                }
-                if (!$path || !file_exists($path)) {
-                    abort(404, 'Arquivo não encontrado no servidor');
+                    abort(404, 'Arquivo físico não encontrado. O arquivo pode ter sido removido do servidor. Por favor, faça upload de um novo arquivo.');
                 }
                 
                 $mimeType = mime_content_type($path);
@@ -114,19 +102,7 @@ class VagaController extends Controller
                     $path = storage_path('app/public/' . $arquivo);
                 }
                 if (!$path || !file_exists($path)) {
-                    $files = glob(storage_path('app/public/vagas/editais/*.pdf'));
-                    if (!empty($files)) {
-                        $path = $files[0];
-                    }
-                }
-                if (!$path || !file_exists($path)) {
-                    $files = glob(storage_path('app/public/vagas/editais/*'));
-                    if (!empty($files)) {
-                        $path = $files[0];
-                    }
-                }
-                if (!$path || !file_exists($path)) {
-                    abort(404, 'Arquivo não encontrado no servidor');
+                    abort(404, 'Arquivo físico não encontrado. O arquivo pode ter sido removido do servidor. Por favor, faça upload de um novo arquivo.');
                 }
                 
                 $mimeType = mime_content_type($path);
@@ -153,21 +129,17 @@ class VagaController extends Controller
         $campoNomeOriginal = 'nome_original_' . $tipo;
         $campoHash = 'hash_' . $tipo;
 
-        if (!$vaga->$campoArquivo || $vaga->$campoArquivo === '0') {
-            return back()->with('error', 'Arquivo não encontrado.');
-        }
-
         $arquivo = $vaga->$campoArquivo;
-        $caminho = storage_path('app/public/' . $arquivo);
         
-        if (file_exists($caminho)) {
-            unlink($caminho);
+        if ($arquivo && $arquivo !== '0') {
+            $caminho = storage_path('app/public/' . $arquivo);
+            if (file_exists($caminho)) {
+                unlink($caminho);
+            }
         }
-
-        $this->limparArquivosOrfaos();
 
         $vaga->update([
-            $campoArquivo => null,
+            $campoArquivo => '0',
             $campoNomeOriginal => null,
             $campoHash => null,
         ]);
@@ -255,9 +227,17 @@ class VagaController extends Controller
             $arquivo = $request->file('arquivo_edital');
             $nomeOriginal = $arquivo->getClientOriginalName();
             $hashEdital = hash_file('sha256', $arquivo->getRealPath());
-            $caminho = $arquivo->store('vagas/editais', 'public');
             
-            $dados['arquivo_edital'] = $caminho;
+            $diretorio = storage_path('app/public/vagas/editais');
+            if (!is_dir($diretorio)) {
+                mkdir($diretorio, 0755, true);
+            }
+            
+            $nomeUnico = uniqid() . '_' . $nomeOriginal;
+            $caminhoCompleto = $diretorio . '/' . $nomeUnico;
+            $arquivo->move($diretorio, $nomeUnico);
+            
+            $dados['arquivo_edital'] = 'vagas/editais/' . $nomeUnico;
             $dados['nome_original_edital'] = $nomeOriginal;
             $dados['hash_edital'] = $hashEdital;
         }
@@ -315,21 +295,49 @@ class VagaController extends Controller
         if ($request->hasFile('arquivo_edital')) {
             // Remover arquivo antigo se existir
             if ($vaga->arquivo_edital && $vaga->arquivo_edital !== '0') {
-                Storage::disk('public')->delete($vaga->arquivo_edital);
+                $caminhoAntigo = storage_path('app/public/' . $vaga->arquivo_edital);
+                if (file_exists($caminhoAntigo)) {
+                    unlink($caminhoAntigo);
+                }
             }
-            $validated['arquivo_edital'] = $request->file('arquivo_edital')->store('vagas/editais', 'public');
-            $validated['nome_original_edital'] = $request->file('arquivo_edital')->getClientOriginalName();
-            $validated['hash_edital'] = hash_file('sha256', $request->file('arquivo_edital')->getRealPath());
+            
+            $diretorio = storage_path('app/public/vagas/editais');
+            if (!is_dir($diretorio)) {
+                mkdir($diretorio, 0755, true);
+            }
+            
+            $nomeOriginal = $request->file('arquivo_edital')->getClientOriginalName();
+            $nomeUnico = uniqid() . '_' . $nomeOriginal;
+            $caminhoCompleto = $diretorio . '/' . $nomeUnico;
+            $request->file('arquivo_edital')->move($diretorio, $nomeUnico);
+            
+            $validated['arquivo_edital'] = 'vagas/editais/' . $nomeUnico;
+            $validated['nome_original_edital'] = $nomeOriginal;
+            $validated['hash_edital'] = hash_file('sha256', $caminhoCompleto);
         }
 
         if ($request->hasFile('arquivo_resultados')) {
             // Remover arquivo antigo se existir
             if ($vaga->arquivo_resultados && $vaga->arquivo_resultados !== '0') {
-                Storage::disk('public')->delete($vaga->arquivo_resultados);
+                $caminhoAntigo = storage_path('app/public/' . $vaga->arquivo_resultados);
+                if (file_exists($caminhoAntigo)) {
+                    unlink($caminhoAntigo);
+                }
             }
-            $validated['arquivo_resultados'] = $request->file('arquivo_resultados')->store('vagas/resultados', 'public');
-            $validated['nome_original_resultados'] = $request->file('arquivo_resultados')->getClientOriginalName();
-            $validated['hash_resultados'] = hash_file('sha256', $request->file('arquivo_resultados')->getRealPath());
+            
+            $diretorio = storage_path('app/public/vagas/resultados');
+            if (!is_dir($diretorio)) {
+                mkdir($diretorio, 0755, true);
+            }
+            
+            $nomeOriginal = $request->file('arquivo_resultados')->getClientOriginalName();
+            $nomeUnico = uniqid() . '_' . $nomeOriginal;
+            $caminhoCompleto = $diretorio . '/' . $nomeUnico;
+            $request->file('arquivo_resultados')->move($diretorio, $nomeUnico);
+            
+            $validated['arquivo_resultados'] = 'vagas/resultados/' . $nomeUnico;
+            $validated['nome_original_resultados'] = $nomeOriginal;
+            $validated['hash_resultados'] = hash_file('sha256', $caminhoCompleto);
         }
 
         $vaga->update($validated);

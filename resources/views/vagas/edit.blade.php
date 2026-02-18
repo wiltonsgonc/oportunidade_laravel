@@ -188,7 +188,7 @@
                             <!-- Arquivo do Edital -->
                             <div class="col-md-6">
                                 <label for="arquivo_edital" class="form-label">Arquivo do Edital</label>
-                                @if($vaga->nome_original_edital && $vaga->nome_original_edital !== '')
+                                @if($vaga->nome_original_edital && $vaga->arquivo_edital && $vaga->arquivo_edital !== '0')
                                     <div class="mb-2 p-3 border rounded bg-light">
                                         <div class="d-flex justify-content-between align-items-center">
                                             <div>

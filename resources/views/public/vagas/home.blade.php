@@ -144,7 +144,7 @@
                                     <td>{{ $vaga->programa_curso_area ?? 'N/A' }}</td>
                                     <td>{{ \Carbon\Carbon::parse($vaga->data_limite)->format('d/m/Y') }}</td>
                                     <td>
-                                        @if($vaga->nome_original_edital)
+                                        @if($vaga->nome_original_edital && $vaga->arquivo_edital && $vaga->arquivo_edital !== '0')
                                             <a href="{{ route('vagas.download', ['tipo' => 'edital', 'id' => $vaga->id]) }}" 
                                                target="_blank" class="btn btn-sm btn-secondary">
                                                 <i class="bi bi-file-earmark-text"></i> Edital
@@ -154,7 +154,7 @@
                                         @endif
                                     </td>
                                     <td>
-                                        @if($vaga->nome_original_resultados)
+                                        @if($vaga->nome_original_resultados && $vaga->arquivo_resultados && $vaga->arquivo_resultados !== '0')
                                             <a href="{{ route('vagas.download', ['tipo' => 'resultados', 'id' => $vaga->id]) }}" 
                                                target="_blank" class="btn btn-sm btn-success">
                                                 <i class="bi bi-download"></i> Resultados
@@ -227,14 +227,14 @@
 
                                     <!-- Botões -->
                                     <div class="d-grid gap-2">
-                                        @if($vaga->nome_original_edital)
+                                        @if($vaga->nome_original_edital && $vaga->arquivo_edital && $vaga->arquivo_edital !== '0')
                                             <a href="{{ route('vagas.download', ['tipo' => 'edital', 'id' => $vaga->id]) }}" 
                                                target="_blank" class="btn btn-secondary">
                                                 <i class="bi bi-file-earmark-text"></i> Edital
                                             </a>
                                         @endif
 
-                                        @if($vaga->nome_original_resultados)
+                                        @if($vaga->nome_original_resultados && $vaga->arquivo_resultados && $vaga->arquivo_resultados !== '0')
                                             <a href="{{ route('vagas.download', ['tipo' => 'resultados', 'id' => $vaga->id]) }}" 
                                                target="_blank" class="btn btn-outline-success">
                                                 <i class="bi bi-download"></i> Resultados
