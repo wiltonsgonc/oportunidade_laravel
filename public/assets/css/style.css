@@ -2,6 +2,21 @@
 /* 1. ESTILOS GERAIS E LAYOUT DO BODY                */
 /* ================================================= */
 
+/* Correção de contraste nos botões de filtro de vagas */
+.btn-danger:hover,
+.btn-outline-danger:hover {
+    color: #fff !important;
+    background-color: #b02a37;
+    border-color: #b02a37;
+}
+
+.btn-success:hover,
+.btn-outline-success:hover {
+    color: #fff !important;
+    background-color: #1e7e34;
+    border-color: #1e7e34;
+}
+
 body {
     background-color: #f8f9fa;
     display: flex;
