@@ -321,6 +321,7 @@ class VagaController extends Controller
             'link_inscricao' => 'required|string|max:512',
             'descricao' => 'required|string',
             'arquivo_edital' => 'nullable|file|mimes:pdf,doc,docx,odt|max:10240',
+            'arquivo_resultados' => 'nullable|file|mimes:pdf,doc,docx,odt|max:10240',
             'status' => 'required|string|in:aberto,encerrado',
         ]);
 
