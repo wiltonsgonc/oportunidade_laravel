@@ -247,6 +247,43 @@
                                                 <i class="bi bi-pencil-square"></i> Inscreva-se
                                             </a>
                                         @endif
+
+                                        <!-- Anexos -->
+                                        @if($vaga->anexos && $vaga->anexos->count() > 0)
+                                            <div class="mt-2">
+                                                <small class="text-muted d-block mb-1">Anexo:</small>
+                                                @if($vaga->anexos->count() == 1)
+                                                    @php $anexo = $vaga->anexos->first(); @endphp
+                                                    <a href="{{ route('vagas.download', ['tipo' => 'anexo', 'id' => $anexo->id]) }}" 
+                                                       target="_blank" class="btn btn-sm btn-outline-secondary text-truncate d-inline-block" 
+                                                       style="max-width: 100%;" title="{{ $anexo->nome_original }}">
+                                                        <i class="bi bi-paperclip"></i> {{ Str::limit($anexo->nome_original, 30) }}
+                                                    </a>
+                                                @else
+                                                    <div class="dropdown">
+                                                        <button class="btn btn-sm btn-outline-secondary dropdown-toggle" 
+                                                                type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                                            <i class="bi bi-paperclip"></i> Anexos ({{ $vaga->anexos->count() }})
+                                                        </button>
+                                                        <ul class="dropdown-menu dropdown-menu-end">
+                                                            @foreach($vaga->anexos as $anexo)
+                                                                <li>
+                                                                    <a class="dropdown-item d-flex justify-content-between align-items-center" 
+                                                                       href="{{ route('vagas.download', ['tipo' => 'anexo', 'id' => $anexo->id]) }}" 
+                                                                       target="_blank">
+                                                                        <span class="text-truncate" style="max-width: 200px;" title="{{ $anexo->nome_original }}">
+                                                                            <i class="bi bi-file-earmark me-1"></i>
+                                                                            {{ Str::limit($anexo->nome_original, 25) }}
+                                                                        </span>
+                                                                        <i class="bi bi-download ms-2"></i>
+                                                                    </a>
+                                                                </li>
+                                                            @endforeach
+                                                        </ul>
+                                                    </div>
+                                                @endif
+                                            </div>
+                                        @endif
                                     </div>
                                 </div>
                             </div>

@@ -63,8 +63,15 @@ Route::middleware('auth')->group(function () {
         Route::get('/para-editar', [VagaController::class, 'paraEditar'])->name('vagas.para-editar');
         Route::get('/para-excluir', [VagaController::class, 'paraExcluir'])->name('vagas.para-excluir');
         
-        // Excluir arquivo
+        // Upload e exclusão de anexos (antes das rotas com parâmetro)
+        Route::post('/{id}/anexo', [VagaController::class, 'uploadAnexo'])->name('vagas.upload-anexo');
+        Route::delete('/{id}/anexo/{anexoId}', [VagaController::class, 'excluirAnexo'])->name('vagas.excluir-anexo');
+        
+        // Excluir arquivo (edital/resultados)
         Route::delete('/{id}/arquivo/{tipo}', [VagaController::class, 'excluirArquivo'])->name('vagas.excluir-arquivo');
+        
+        // Download (genérico para editais, resultados e anexos)
+        Route::get('/download/{tipo}/{id}', [VagaController::class, 'download'])->name('vagas.download');
         
         // Visualizar
         Route::get('/{id}', [VagaController::class, 'show'])->name('vagas.show');
