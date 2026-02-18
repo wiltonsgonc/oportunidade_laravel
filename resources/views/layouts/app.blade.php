@@ -5,6 +5,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="csrf-token" content="{{ csrf_token() }}">
     <title>@yield('title', 'Sistema de Oportunidades')</title>
     
     {{-- Assets locais --}}
@@ -12,6 +13,7 @@
     <link rel="stylesheet" href="{{ asset('assets/icons/bootstrap-icons.css') }}">
     <link rel="stylesheet" href="{{ asset('assets/css/bootstrap.min.css') }}">
     <link rel="stylesheet" href="{{ asset('assets/css/style.css') }}">
+    <link rel="stylesheet" href="{{ asset('assets/css/sweetalert2.min.css') }}">
     
     @stack('styles')
 </head>
@@ -80,6 +82,16 @@
     <script src="{{ asset('assets/js/bootstrap.bundle.min.js') }}"></script>
     <script src="{{ asset('assets/js/sweetalert2.min.js') }}"></script>
     <script src="{{ asset('assets/js/alert.js') }}"></script>
+    <script>
+        // Teste automático do SweetAlert2 ao carregar
+        document.addEventListener('DOMContentLoaded', function() {
+            if (typeof Swal !== 'undefined') {
+                console.log('SweetAlert2 carregado com sucesso');
+            } else {
+                console.error('SweetAlert2 NÃO foi carregado!');
+            }
+        });
+    </script>
     @stack('scripts')
 </body>
 
