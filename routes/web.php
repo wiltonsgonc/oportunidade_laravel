@@ -7,6 +7,7 @@ use App\Http\Controllers\AnexoController;
 use App\Http\Controllers\RetificacaoController;
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\UsuarioController;
 
 /*
 |--------------------------------------------------------------------------
@@ -115,6 +116,16 @@ Route::middleware('auth')->group(function () {
             Route::get('/lixeira', [VagaController::class, 'trash'])->name('trash');
             Route::post('/{id}/restaurar', [VagaController::class, 'restore'])->name('restore');
             Route::delete('/{id}/force-delete', [VagaController::class, 'forceDelete'])->name('forceDelete');
+        });
+        
+        // Gerenciamento de Usuários
+        Route::prefix('usuarios')->name('usuarios.')->group(function () {
+            Route::get('/', [UsuarioController::class, 'index'])->name('index');
+            Route::get('/create', [UsuarioController::class, 'create'])->name('create');
+            Route::post('/', [UsuarioController::class, 'store'])->name('store');
+            Route::get('/{id}/edit', [UsuarioController::class, 'edit'])->name('edit');
+            Route::put('/{id}', [UsuarioController::class, 'update'])->name('update');
+            Route::delete('/{id}', [UsuarioController::class, 'destroy'])->name('destroy');
         });
     });
 });

@@ -12,8 +12,16 @@
             </h1>
             <p class="text-muted mb-0">Painel de controle do sistema</p>
         </div>
-        <div>
-            <a href="{{ route('dashboard') }}" class="btn btn-outline-secondary">
+        <div class="d-flex gap-2">
+            @if(Auth::user()->is_admin_principal)
+            <a href="{{ route('admin.auditoria.index') }}" class="btn btn-outline-primary">
+                <i class="bi bi-shield-check me-1"></i> Auditoria
+            </a>
+            @endif
+            <a href="{{ route('admin.usuarios.index') }}" class="btn btn-outline-secondary">
+                <i class="bi bi-people me-1"></i> Gerenciar Usuários
+            </a>
+            <a href="{{ route('dashboard') }}" class="btn btn-secondary">
                 <i class="bi bi-arrow-left me-1"></i> Voltar
             </a>
         </div>

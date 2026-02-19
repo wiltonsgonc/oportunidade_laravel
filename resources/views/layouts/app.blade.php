@@ -43,6 +43,28 @@
                             <i class="bi bi-person-circle me-1"></i> {{ Auth::user()->nome ?? Auth::user()->usuario }}
                         </a>
                         <ul class="dropdown-menu">
+                            @if(Auth::user()->is_admin)
+                            <li>
+                                <a class="dropdown-item" href="{{ route('admin.dashboard') }}">
+                                    <i class="bi bi-speedometer2 me-2"></i> Dashboard Admin
+                                </a>
+                            </li>
+                            <li>
+                                <a class="dropdown-item" href="{{ route('admin.usuarios.index') }}">
+                                    <i class="bi bi-people me-2"></i> Gerenciar Usuários
+                                </a>
+                            </li>
+                            @if(Auth::user()->is_admin_principal)
+                            <li>
+                                <a class="dropdown-item" href="{{ route('admin.auditoria.index') }}">
+                                    <i class="bi bi-shield-check me-2"></i> Auditoria
+                                </a>
+                            </li>
+                            @endif
+                            <li>
+                                <hr class="dropdown-divider">
+                            </li>
+                            @endif
                             <li>
                                 <a class="dropdown-item" href="{{ route('password.change') }}">
                                     <i class="bi bi-key me-2"></i> Alterar Senha
