@@ -13,13 +13,11 @@ class RetificacaoController extends Controller
         $vaga = Vaga::findOrFail($id);
         
         $usuario = auth()->user();
-        if ($vaga->criado_por !== $usuario->id && !$usuario->is_admin) {
-            abort(403, 'Você não tem permissão para gerenciar retificações desta vaga.');
-        }
+        $podeEditar = ($vaga->criado_por == $usuario->id) || $usuario->is_admin;
 
         $vaga->load('retificacoes');
 
-        return view('vagas.retificacoes', compact('vaga'));
+        return view('vagas.retificacoes', compact('vaga', 'podeEditar'));
     }
 
     public function upload(Request $request, $id)

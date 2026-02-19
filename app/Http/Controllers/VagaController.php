@@ -289,13 +289,11 @@ class VagaController extends Controller
         $vaga = Vaga::findOrFail($id);
         
         $usuario = auth()->user();
-        if ($vaga->criado_por !== $usuario->id && !$usuario->is_admin) {
-            abort(403, 'Você não tem permissão para gerenciar anexos desta vaga.');
-        }
+        $podeEditar = ($vaga->criado_por == $usuario->id) || $usuario->is_admin;
 
         $vaga->load('anexos');
 
-        return view('vagas.anexos', compact('vaga'));
+        return view('vagas.anexos', compact('vaga', 'podeEditar'));
     }
 
     public function edit($id)
@@ -304,13 +302,11 @@ class VagaController extends Controller
         
         // Verificar se o usuário tem permissão para editar
         $usuario = auth()->user();
-        if ($vaga->criado_por !== $usuario->id && !$usuario->is_admin) {
-            abort(403, 'Você não tem permissão para editar esta vaga.');
-        }
+        $podeEditar = ($vaga->criado_por == $usuario->id) || $usuario->is_admin;
 
         $vaga->load('anexos');
 
-        return view('vagas.edit', compact('vaga'));
+        return view('vagas.edit', compact('vaga', 'podeEditar'));
     }
 
     public function update(Request $request, $id)
