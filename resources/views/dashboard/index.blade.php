@@ -117,9 +117,6 @@
                                 </td>
                                 <td class="text-end pe-4">
                                     <div class="btn-group btn-group-sm" role="group" aria-label="Ações">
-                                        <a href="{{ route('vagas.show', $vaga->id) }}" class="btn btn-outline-primary btn-sm" title="Visualizar">
-                                            <i class="bi bi-eye"></i>
-                                        </a>
                                         <a href="{{ route('vagas.edit', $vaga->id) }}" class="btn btn-outline-warning btn-sm" title="Editar">
                                             <i class="bi bi-pencil"></i>
                                         </a>

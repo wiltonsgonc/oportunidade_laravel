@@ -86,9 +86,6 @@ Route::middleware('auth')->group(function () {
         // Download (genérico para editais, resultados e anexos)
         Route::get('/download/{tipo}/{id}', [VagaController::class, 'download'])->name('vagas.download');
         
-        // Visualizar
-        Route::get('/{id}', [VagaController::class, 'show'])->name('vagas.show');
-        
         // Editar, Atualizar e Excluir
         Route::get('/{id}/edit', [VagaController::class, 'edit'])->name('vagas.edit');
         Route::put('/{id}', [VagaController::class, 'update'])->name('vagas.update');
