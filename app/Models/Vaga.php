@@ -5,10 +5,11 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use App\Traits\Auditavel;
 
 class Vaga extends Model
 {
-    use SoftDeletes;
+    use SoftDeletes, Auditavel;
     
     protected $fillable = [
         'edital',
@@ -57,5 +58,13 @@ class Vaga extends Model
     public function anexos()
     {
         return $this->hasMany(VagaAnexo::class, 'vaga_id')->orderBy('created_at', 'desc');
+    }
+
+    /**
+     * Retificações da vaga.
+     */
+    public function retificacoes()
+    {
+        return $this->hasMany(VagaRetificacao::class, 'vaga_id')->orderBy('created_at', 'desc');
     }
 }

@@ -61,7 +61,12 @@
                 <h5 class="mb-0">
                     <i class="bi bi-list-ul me-2"></i>Vagas Cadastradas
                 </h5>
-                <div>
+                <div class="d-flex gap-2">
+                    @if(Auth::check() && Auth::user()->is_admin_principal)
+                    <a href="{{ route('admin.auditoria.index') }}" class="btn btn-outline-primary btn-sm">
+                        <i class="bi bi-shield-check me-1"></i> Auditoria
+                    </a>
+                    @endif
                     <a href="{{ route('vagas.create') }}" class="btn btn-primary btn-sm">
                         <i class="bi bi-plus-circle me-1"></i> Nova Vaga
                     </a>
@@ -112,14 +117,14 @@
                                 </td>
                                 <td class="text-end pe-4">
                                     <div class="btn-group btn-group-sm" role="group" aria-label="Ações">
-                                        <a href="{{ route('vagas.show', $vaga->id) }}" class="btn btn-outline-primary btn-sm" title="Visualizar">
-                                            <i class="bi bi-eye"></i>
-                                        </a>
                                         <a href="{{ route('vagas.edit', $vaga->id) }}" class="btn btn-outline-warning btn-sm" title="Editar">
                                             <i class="bi bi-pencil"></i>
                                         </a>
                                         <a href="{{ route('vagas.anexos', $vaga->id) }}" class="btn btn-outline-info btn-sm" title="Anexos">
                                             <i class="bi bi-paperclip"></i>
+                                        </a>
+                                        <a href="{{ route('vagas.retificacoes', $vaga->id) }}" class="btn btn-outline-primary btn-sm" title="Retificações">
+                                            <i class="bi bi-file-earmark-text"></i>
                                         </a>
                                         <a href="{{ route('vagas.destroy', $vaga->id) }}" 
                                            class="btn btn-outline-danger btn-sm btn-delete" 

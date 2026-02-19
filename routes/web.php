@@ -2,7 +2,9 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\VagaController;
+use App\Http\Controllers\AuditoriaController;
 use App\Http\Controllers\AnexoController;
+use App\Http\Controllers\RetificacaoController;
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\DashboardController;
 
@@ -71,14 +73,18 @@ Route::middleware('auth')->group(function () {
         Route::post('/{id}/anexo', [AnexoController::class, 'upload'])->name('vagas.upload-anexo');
         Route::delete('/{id}/anexo/{anexoId}', [AnexoController::class, 'excluir'])->name('vagas.excluir-anexo');
         
+        // Página de retificações
+        Route::get('/{id}/retificacoes', [RetificacaoController::class, 'index'])->name('vagas.retificacoes');
+        
+        // Upload e exclusão de retificações (controlador separado)
+        Route::post('/{id}/retificacao', [RetificacaoController::class, 'upload'])->name('vagas.upload-retificacao');
+        Route::delete('/{id}/retificacao/{retificacaoId}', [RetificacaoController::class, 'excluir'])->name('vagas.excluir-retificacao');
+        
         // Excluir arquivo (edital/resultados)
         Route::delete('/{id}/arquivo/{tipo}', [VagaController::class, 'excluirArquivo'])->name('vagas.excluir-arquivo');
         
         // Download (genérico para editais, resultados e anexos)
         Route::get('/download/{tipo}/{id}', [VagaController::class, 'download'])->name('vagas.download');
-        
-        // Visualizar
-        Route::get('/{id}', [VagaController::class, 'show'])->name('vagas.show');
         
         // Editar, Atualizar e Excluir
         Route::get('/{id}/edit', [VagaController::class, 'edit'])->name('vagas.edit');
@@ -94,6 +100,14 @@ Route::middleware('auth')->group(function () {
     Route::prefix('admin')->name('admin.')->group(function () {
         // Dashboard admin
         Route::get('/dashboard', [DashboardController::class, 'admin'])->name('dashboard');
+        
+        // Auditoria
+        Route::prefix('auditoria')->name('auditoria.')->group(function () {
+            Route::get('/', [AuditoriaController::class, 'index'])->name('index');
+            Route::get('/{id}/detalhes', [AuditoriaController::class, 'detalhes'])->name('detalhes');
+            Route::post('/restaurar', [AuditoriaController::class, 'restaurar'])->name('restaurar');
+            Route::delete('/excluir-permanente', [AuditoriaController::class, 'excluirPermanente'])->name('excluirPermanente');
+        });
         
         // Vagas admin
         Route::prefix('vagas')->name('vagas.')->group(function () {
