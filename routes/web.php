@@ -2,6 +2,7 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\VagaController;
+use App\Http\Controllers\AuditoriaController;
 use App\Http\Controllers\AnexoController;
 use App\Http\Controllers\RetificacaoController;
 use App\Http\Controllers\Auth\LoginController;
@@ -102,6 +103,14 @@ Route::middleware('auth')->group(function () {
     Route::prefix('admin')->name('admin.')->group(function () {
         // Dashboard admin
         Route::get('/dashboard', [DashboardController::class, 'admin'])->name('dashboard');
+        
+        // Auditoria
+        Route::prefix('auditoria')->name('auditoria.')->group(function () {
+            Route::get('/', [AuditoriaController::class, 'index'])->name('index');
+            Route::get('/{id}/detalhes', [AuditoriaController::class, 'detalhes'])->name('detalhes');
+            Route::post('/restaurar', [AuditoriaController::class, 'restaurar'])->name('restaurar');
+            Route::delete('/excluir-permanente', [AuditoriaController::class, 'excluirPermanente'])->name('excluirPermanente');
+        });
         
         // Vagas admin
         Route::prefix('vagas')->name('vagas.')->group(function () {
