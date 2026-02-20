@@ -20,7 +20,16 @@
                 </a>
             </div>
 
+            @if(!$podeEditar)
+            <div class="alert alert-info mb-4">
+                <i class="bi bi-info-circle me-2"></i>
+                Você está visualizando as retificações em modo somente leitura. 
+                Apenas o criador ou um administrador podem fazer alterações.
+            </div>
+            @endif
+
             <!-- Formulário de Upload -->
+            @if($podeEditar)
             <div class="card mb-4">
                 <div class="card-header bg-primary text-white">
                     <h5 class="mb-0"><i class="bi bi-upload me-2"></i>Adicionar Nova Retificação</h5>
@@ -61,6 +70,7 @@
                     @endif
                 </div>
             </div>
+            @endif
 
             <!-- Lista de Retificações -->
             <div class="card">

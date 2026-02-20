@@ -117,7 +117,10 @@
                                 </td>
                                 <td class="text-end pe-4">
                                     <div class="btn-group btn-group-sm" role="group" aria-label="Ações">
-                                        <a href="{{ route('vagas.edit', $vaga->id) }}" class="btn btn-outline-warning btn-sm" title="Editar">
+                                        @php
+                                            $podeEditar = (Auth::id() == $vaga->criado_por) || Auth::user()->is_admin;
+                                        @endphp
+                                        <a href="{{ route('vagas.edit', $vaga->id) }}" class="btn btn-outline-warning btn-sm" title="Visualizar/Editar">
                                             <i class="bi bi-pencil"></i>
                                         </a>
                                         <a href="{{ route('vagas.anexos', $vaga->id) }}" class="btn btn-outline-info btn-sm" title="Anexos">
@@ -126,6 +129,7 @@
                                         <a href="{{ route('vagas.retificacoes', $vaga->id) }}" class="btn btn-outline-primary btn-sm" title="Retificações">
                                             <i class="bi bi-file-earmark-text"></i>
                                         </a>
+                                        @if($podeEditar)
                                         <a href="{{ route('vagas.destroy', $vaga->id) }}" 
                                            class="btn btn-outline-danger btn-sm btn-delete" 
                                            data-id="{{ $vaga->id }}" 
@@ -134,6 +138,7 @@
                                            title="Excluir">
                                             <i class="bi bi-trash"></i>
                                         </a>
+                                        @endif
                                     </div>
                                 </td>
                             </tr>

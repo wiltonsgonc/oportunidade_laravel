@@ -69,14 +69,10 @@ class DashboardController extends Controller
         $vagasPorSetor = $this->getVagasPorSetor($usuario->is_admin ? null : $usuario->id);
         
         // ============ ÚLTIMAS VAGAS ============
-        $queryUltimasVagas = Vaga::with('usuario');
-        
-        if (!$usuario->is_admin) {
-            $queryUltimasVagas->where('criado_por', $usuario->id);
-        }
-        
-        $ultimasVagas = $queryUltimasVagas->orderBy('created_at', 'desc')
-                                         ->paginate(15);
+        // Todos os usuários veem todas as vagas (visualização)
+        $ultimasVagas = Vaga::with('usuario')
+                           ->orderBy('created_at', 'desc')
+                           ->paginate(15);
         
         // ============ VAGAS EXPIRANDO EM BREVE ============
         $vagasExpirando = Vaga::where('status', 'aberto')
