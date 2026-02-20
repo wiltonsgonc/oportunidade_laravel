@@ -324,51 +324,5 @@
 @endsection
 
 @push('scripts')
-<script>
-document.addEventListener('DOMContentLoaded', function() {
-    const setorSelect = document.getElementById('setor');
-    const tipoSelect = document.getElementById('tipo');
-    
-    const opcoesLocalMapa = {
-        'PRO-REITORIA DE GRADUAÇÃO': ['GRADUAÇÃO'],
-        'PRO-REITORIA DE PÓS-GRADUAÇÃO E PESQUISA': ['STRICTO SENSU', 'LATO SENSU'],
-        'ÁREA TECNOLÓGICA SENAI CIMATEC': ['PDI']
-    };
-
-    function populateTipo(setor, selectedTipo = null) {
-        tipoSelect.innerHTML = '<option value="" disabled>Selecione o Local</option>';
-        
-        const locais = opcoesLocalMapa[setor] || [];
-        
-        locais.forEach(function(local) {
-            const option = document.createElement('option');
-            option.value = local;
-            option.textContent = local;
-            if (local === selectedTipo) {
-                option.selected = true;
-            }
-            tipoSelect.appendChild(option);
-        });
-        
-        if (locais.length === 0) {
-            tipoSelect.innerHTML = '<option value="" selected disabled>Sem opções para este setor</option>';
-        }
-        
-        tipoSelect.disabled = locais.length === 0;
-    }
-
-    // Inicializar tipo com base no setor carregado
-    const setorInicial = setorSelect.value;
-    const tipoSelecionado = tipoSelect.value;
-    if (setorInicial) {
-        populateTipo(setorInicial, tipoSelecionado);
-    }
-
-    setorSelect.addEventListener('change', function() {
-        populateTipo(this.value);
-    });
-
-    // Upload de anexos via AJAX com barra de progresso
-});
-</script>
+<script src="{{ asset('assets/js/form_logic.js') }}"></script>
 @endpush

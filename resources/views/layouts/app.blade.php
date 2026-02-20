@@ -121,16 +121,6 @@
     <script src="{{ asset('assets/js/bootstrap.bundle.min.js') }}"></script>
     <script src="{{ asset('assets/js/sweetalert2.min.js') }}"></script>
     <script src="{{ asset('assets/js/alert.js') }}"></script>
-    <script>
-        // Teste automático do SweetAlert2 ao carregar
-        document.addEventListener('DOMContentLoaded', function() {
-            if (typeof Swal !== 'undefined') {
-                console.log('SweetAlert2 carregado com sucesso');
-            } else {
-                console.error('SweetAlert2 NÃO foi carregado!');
-            }
-        });
-    </script>
     @stack('scripts')
 </body>
 

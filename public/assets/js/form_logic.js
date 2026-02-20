@@ -10,7 +10,7 @@ document.addEventListener("DOMContentLoaded", function () {
   // Mapeamento da dependência: Setor -> Opções de Local
   const localOptions = {
     "PRO-REITORIA DE PÓS-GRADUAÇÃO E PESQUISA": ["STRICTO SENSU", "LATO SENSU"],
-    "PRO-REITORIA DE GRADUAÇÃO": [], // Nenhuma opção de Local/Tipo
+    "PRO-REITORIA DE GRADUAÇÃO": ["GRADUAÇÃO"],
     "ÁREA TECNOLÓGICA SENAI CIMATEC": ["PDI"],
   };
 
