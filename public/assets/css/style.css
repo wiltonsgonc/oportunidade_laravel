@@ -299,6 +299,7 @@ body {
 
 /* Ajustes para tabela de vagas encerradas */
 .table-responsive {
+    overflow-x: auto;
     background: rgba(255, 255, 255, 0.9);
     border-radius: 10px;
     padding: 20px;
@@ -751,7 +752,7 @@ body.admin-page {
 /* Tabela de gerenciamento */
 .table-responsive {
     border-radius: 8px;
-    overflow: hidden;
+    overflow-x: auto;
 }
 
 .table-primary th {
