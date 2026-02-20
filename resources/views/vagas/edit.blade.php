@@ -324,43 +324,5 @@
 @endsection
 
 @push('scripts')
-<script>
-document.addEventListener('DOMContentLoaded', function() {
-    const setorSelect = document.getElementById('setor');
-    const tipoSelect = document.getElementById('tipo');
-    
-    const opcoesLocalMapa = {
-        'PRO-REITORIA DE GRADUAÇÃO': [],
-        'PRO-REITORIA DE PÓS-GRADUAÇÃO E PESQUISA': ['STRICTO SENSU', 'LATO SENSU'],
-        'ÁREA TECNOLÓGICA SENAI CIMATEC': ['PDI']
-    };
-
-    setorSelect.addEventListener('change', function() {
-        const setorSelecionado = this.value;
-        const tipoAtual = tipoSelect.value;
-        
-        tipoSelect.innerHTML = '<option value="" disabled>Selecione o Local</option>';
-        
-        const locais = opcoesLocalMapa[setorSelecionado] || [];
-        
-        locais.forEach(function(local) {
-            const option = document.createElement('option');
-            option.value = local;
-            option.textContent = local;
-            if (local === tipoAtual) {
-                option.selected = true;
-            }
-            tipoSelect.appendChild(option);
-        });
-        
-        if (locais.length === 0) {
-            tipoSelect.innerHTML = '<option value="" selected disabled>Sem opções para este setor</option>';
-        }
-        
-        tipoSelect.disabled = locais.length === 0;
-    });
-
-    // Upload de anexos via AJAX com barra de progresso
-});
-</script>
+<script src="{{ asset('assets/js/form_logic.js') }}"></script>
 @endpush

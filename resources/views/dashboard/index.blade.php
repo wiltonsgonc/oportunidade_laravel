@@ -62,11 +62,6 @@
                     <i class="bi bi-list-ul me-2"></i>Vagas Cadastradas
                 </h5>
                 <div class="d-flex gap-2">
-                    @if(Auth::check() && Auth::user()->is_admin_principal)
-                    <a href="{{ route('admin.auditoria.index') }}" class="btn btn-outline-primary btn-sm">
-                        <i class="bi bi-shield-check me-1"></i> Auditoria
-                    </a>
-                    @endif
                     <a href="{{ route('vagas.create') }}" class="btn btn-primary btn-sm">
                         <i class="bi bi-plus-circle me-1"></i> Nova Vaga
                     </a>

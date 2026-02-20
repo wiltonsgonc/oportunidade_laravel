@@ -67,4 +67,50 @@ class Vaga extends Model
     {
         return $this->hasMany(VagaRetificacao::class, 'vaga_id')->orderBy('created_at', 'desc');
     }
+
+    /**
+     * Verifica se a vaga está vencida (data_limite passou).
+     */
+    public function estaVencida(): bool
+    {
+        return $this->data_limite->isPast();
+    }
+
+    /**
+     * Encerra a vaga se estiver vencida.
+     */
+    public function encerrarSeVencida(): bool
+    {
+        if ($this->estaVencida() && $this->status === 'aberto') {
+            $this->update(['status' => 'encerrado']);
+            return true;
+        }
+        return false;
+    }
+
+    /**
+     * Escopo para buscar vagas abertas vencidas.
+     */
+    public function scopeAbertasVencidas($query)
+    {
+        return $query->where('status', 'aberto')
+                     ->where('data_limite', '<', now()->startOfDay());
+    }
+
+    /**
+     * Encerra todas as vagas abertas que estão vencidas.
+     */
+    public static function encerrarVagasVencidas(): int
+    {
+        $vagasVencidas = static::query()->abertasVencidas()->get();
+        $contagem = 0;
+
+        foreach ($vagasVencidas as $vaga) {
+            if ($vaga->encerrarSeVencida()) {
+                $contagem++;
+            }
+        }
+
+        return $contagem;
+    }
 }

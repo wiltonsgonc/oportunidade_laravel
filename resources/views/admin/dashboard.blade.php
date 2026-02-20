@@ -318,17 +318,4 @@
 @endsection
 
 @push('styles')
-<style>
-    .avatar-sm {
-        width: 40px;
-        height: 40px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-    }
-    .progress-bar {
-        font-size: 12px;
-        line-height: 20px;
-    }
-</style>
 @endpush

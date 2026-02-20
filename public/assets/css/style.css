@@ -733,6 +733,21 @@ body.admin-page {
 /* 12. ESTILOS PARA TABELAS DE GERENCIAMENTO        */
 /* ================================================= */
 
+/* Avatar small */
+.avatar-sm {
+    width: 40px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* Progress bar */
+.progress-bar {
+    font-size: 12px;
+    line-height: 20px;
+}
+
 /* Tabela de gerenciamento */
 .table-responsive {
     border-radius: 8px;

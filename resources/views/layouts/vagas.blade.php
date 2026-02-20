@@ -9,65 +9,6 @@
     <link rel="stylesheet" href="{{ asset('assets/icons/bootstrap-icons.css') }}">
     <link rel="stylesheet" href="{{ asset('assets/css/bootstrap.min.css') }}">
     <link rel="stylesheet" href="{{ asset('assets/css/style.css') }}">
-    <style>
-        /* Classes de filtro para imagens de fundo */
-        .filtro-padrao {
-            background-image: url("{{ asset('assets/img/background.jpg') }}");
-            background-size: cover;
-            background-position: center;
-            background-repeat: no-repeat;
-            min-height: calc(100vh - 200px);
-        }
-
-        .filtro-tecnologico {
-            background-image: url("{{ asset('assets/img/filtro_tecnologico.jpg') }}");
-            background-size: cover;
-            background-position: center;
-            background-repeat: no-repeat;
-            min-height: calc(100vh - 200px);
-        }
-
-        .filtro-pos-pesquisa {
-            background-image: url("{{ asset('assets/img/filtro_pos_pesquisa.jpg') }}");
-            background-size: cover;
-            background-position: center;
-            background-repeat: no-repeat;
-            min-height: calc(100vh - 200px);
-        }
-
-        .filtro-graduacao {
-            background-image: url("{{ asset('assets/img/filtro_graduacao.jpg') }}");
-            background-size: cover;
-            background-position: center;
-            background-repeat: no-repeat;
-            min-height: calc(100vh - 200px);
-        }
-
-        /* Estilos gerais */
-        .flex-grow {
-            flex-grow: 1;
-        }
-
-        .text-justify-custom {
-            text-align: justify;
-        }
-
-        /* Ajustes para os cards */
-        .card {
-            transition: transform 0.3s, box-shadow 0.3s;
-        }
-
-        .card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
-        }
-
-        /* Responsividade da tabela */
-        .table-responsive {
-            overflow-x: auto;
-            -webkit-overflow-scrolling: touch;
-        }
-    </style>
     @stack('styles')
 </head>
 

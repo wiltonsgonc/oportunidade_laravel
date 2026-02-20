@@ -151,48 +151,5 @@
 @endsection
 
 @push('scripts')
-<script>
-document.addEventListener('DOMContentLoaded', function() {
-    document.querySelectorAll('.btn-excluir').forEach(function(btn) {
-        btn.addEventListener('click', function() {
-            const url = this.dataset.url;
-            const tipo = this.dataset.tipo;
-            const nome = this.dataset.nome;
-            
-            Swal.fire({
-                title: 'Confirmar Exclusão',
-                html: `Tem certeza que deseja excluir ${tipo}: "<strong>${nome}</strong>"?`,
-                icon: 'warning',
-                showCancelButton: true,
-                confirmButtonColor: '#d33',
-                cancelButtonColor: '#6c757d',
-                confirmButtonText: 'Sim, excluir!',
-                cancelButtonText: 'Cancelar'
-            }).then((result) => {
-                if (result.isConfirmed) {
-                    const form = document.createElement('form');
-                    form.method = 'POST';
-                    form.action = url;
-                    
-                    const csrfToken = document.querySelector('meta[name="csrf-token"]')?.content || '';
-                    const csrfInput = document.createElement('input');
-                    csrfInput.type = 'hidden';
-                    csrfInput.name = '_token';
-                    csrfInput.value = csrfToken;
-                    
-                    const methodInput = document.createElement('input');
-                    methodInput.type = 'hidden';
-                    methodInput.name = '_method';
-                    methodInput.value = 'DELETE';
-                    
-                    form.appendChild(csrfInput);
-                    form.appendChild(methodInput);
-                    document.body.appendChild(form);
-                    form.submit();
-                }
-            });
-        });
-    });
-});
-</script>
+<script src="{{ asset('assets/js/admin.js') }}"></script>
 @endpush

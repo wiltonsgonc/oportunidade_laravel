@@ -89,12 +89,6 @@
     </div>
 
     <script src="{{ asset('assets/js/bootstrap.bundle.min.js') }}"></script>
-
-    <script>
-        // Foco no campo de email
-        document.addEventListener('DOMContentLoaded', function() {
-            document.getElementById('email').focus();
-        });
-    </script>
+    <script src="{{ asset('assets/js/login.js') }}"></script>
 </body>
 </html>

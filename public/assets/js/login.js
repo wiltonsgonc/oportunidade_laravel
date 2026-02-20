@@ -4,3 +4,11 @@ document.getElementById("loginForm").addEventListener("submit", function (e) {
   btn.disabled = true;
   btn.innerHTML = "Entrando...";
 });
+
+// Foco no campo de email ao carregar
+document.addEventListener('DOMContentLoaded', function() {
+  const emailInput = document.getElementById('email');
+  if (emailInput) {
+    emailInput.focus();
+  }
+});
