@@ -9,6 +9,7 @@ use App\Models\Vaga;
 use App\Models\VagaAnexo;
 use App\Models\VagaRetificacao;
 use App\Models\Usuario;
+use Carbon\Carbon;
 
 class VagaController extends Controller
 {
@@ -251,7 +252,7 @@ class VagaController extends Controller
             'mensalidade_bolsa' => $validated['mensalidade_bolsa'] ?? 'Não se aplica',
             'link_inscricao' => $validated['link_inscricao'],
             'descricao' => $validated['descricao'],
-            'status' => 'aberto',
+            'status' => Carbon::parse($validated['data_limite'])->isPast() ? 'encerrado' : 'aberto',
         ];
 
         // Processar upload do arquivo do edital
@@ -386,6 +387,11 @@ class VagaController extends Controller
         }
 
         $vaga->update($validated);
+
+        // Verificar se a data_limite está no passado e encerrar automaticamente
+        if (Carbon::parse($vaga->data_limite)->isPast() && $vaga->status === 'aberto') {
+            $vaga->update(['status' => 'encerrado']);
+        }
 
         $this->limparArquivosOrfaos();
 
