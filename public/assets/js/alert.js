@@ -1,4 +1,6 @@
 function confirmarExclusao(urlDestino, tipoItem, nomeItem) {
+    const csrfToken = document.querySelector('meta[name="csrf-token"]')?.content || "";
+
     Swal.fire({
         title: 'Confirmar Exclusão',
         html: `Tem certeza que deseja excluir <strong>${tipoItem}</strong>: "${nomeItem}"?`,
@@ -10,7 +12,24 @@ function confirmarExclusao(urlDestino, tipoItem, nomeItem) {
         cancelButtonText: 'Cancelar'
     }).then((result) => {
         if (result.isConfirmed) {
-            window.location.href = urlDestino;
+            const form = document.createElement("form");
+            form.method = "POST";
+            form.action = urlDestino;
+
+            const csrfInput = document.createElement("input");
+            csrfInput.type = "hidden";
+            csrfInput.name = "_token";
+            csrfInput.value = csrfToken;
+
+            const methodInput = document.createElement("input");
+            methodInput.type = "hidden";
+            methodInput.name = "_method";
+            methodInput.value = "DELETE";
+
+            form.appendChild(csrfInput);
+            form.appendChild(methodInput);
+            document.body.appendChild(form);
+            form.submit();
         }
     });
 }

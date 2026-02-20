@@ -253,7 +253,7 @@ document.addEventListener('DOMContentLoaded', function() {
     const tipoSelect = document.getElementById('tipo');
     
     const opcoesLocalMapa = {
-        'PRO-REITORIA DE GRADUAÇÃO': [],
+        'PRO-REITORIA DE GRADUAÇÃO': ['GRADUAÇÃO'],
         'PRO-REITORIA DE PÓS-GRADUAÇÃO E PESQUISA': ['STRICTO SENSU', 'LATO SENSU'],
         'ÁREA TECNOLÓGICA SENAI CIMATEC': ['PDI']
     };
