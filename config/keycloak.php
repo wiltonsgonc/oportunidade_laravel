@@ -8,6 +8,10 @@ return [
     'redirect_uri' => env('KEYCLOAK_REDIRECT_URI'),
     'logout_uri' => env('KEYCLOAK_LOGOUT_URI'),
     
+    // Modo desenvolvimento (sem Keycloak)
+    'dev_mode' => env('KEYCLOAK_DEV_MODE', false),
+    'dev_mock_email' => env('KEYCLOAK_DEV_MOCK_EMAIL', 'admin@cimatec.edu.br'),
+    
     // URLs do Keycloak
     'urls' => [
         'auth' => env('KEYCLOAK_BASE_URL') . '/realms/' . env('KEYCLOAK_REALM') . '/protocol/openid-connect/auth',
