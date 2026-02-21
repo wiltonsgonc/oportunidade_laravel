@@ -5,7 +5,6 @@ use App\Http\Controllers\VagaController;
 use App\Http\Controllers\AuditoriaController;
 use App\Http\Controllers\AnexoController;
 use App\Http\Controllers\RetificacaoController;
-use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Auth\AuthController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\UsuarioController;
@@ -31,7 +30,7 @@ Route::prefix('vagas')->group(function () {
     Route::get('/download/{tipo}/{id}', [VagaController::class, 'download'])->name('vagas.download');
 });
 
-// Autenticação SSO (Keycloak)
+// Autenticação SSO (Keycloak) - apenas em produção
 Route::middleware('guest')->group(function () {
     // Login SSO - redireciona para Keycloak
     Route::get('/login', [AuthController::class, 'redirect'])->name('login');
@@ -41,10 +40,6 @@ Route::middleware('guest')->group(function () {
     
     // Erro na autenticação
     Route::get('/auth/error', [AuthController::class, 'error'])->name('auth.error');
-
-    // Rotas de login local (apenas para admin em desenvolvimento)
-    Route::get('/login/local', [LoginController::class, 'showLoginForm'])->name('login.local');
-    Route::post('/login/local', [LoginController::class, 'login']);
 });
 
 // Logout
