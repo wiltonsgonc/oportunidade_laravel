@@ -151,6 +151,38 @@ Neste modo, o login será automático com o usuário especificado.
 
 ---
 
+## Desativar SSO e Voltar ao Login Local
+
+Para desativar o SSO (Keycloak) e usar o sistema de login local tradicional:
+
+```env
+KEYCLOAK_DEV_MODE=false
+```
+
+Com essa configuração:
+- Acesse `/login` para ver o formulário de login local
+- Ou use a rota `/login/local` diretamente
+- Funciona com usuário/senha cadastrados no banco
+
+### Criar usuário para teste (via SQL):
+
+```sql
+INSERT INTO usuarios (nome, usuario, email, senha, is_admin, is_admin_principal, ativo, created_at, updated_at)
+VALUES (
+    'Administrador',
+    'admin',
+    'admin@exemplo.com',
+    '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', -- senha: password
+    1,
+    1,
+    1,
+    NOW(),
+    NOW()
+);
+```
+
+---
+
 ## Executando a Aplicação
 
 ### Servidor de Desenvolvimento
