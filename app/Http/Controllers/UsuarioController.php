@@ -178,8 +178,12 @@ class UsuarioController extends Controller
         if ($usuarioLogado->is_admin_principal) {
             $dados['is_admin'] = $request->has('is_admin');
             
-            // Proteger admin principal
-            if ($usuario->email !== 'admin@cimatec.com.br') {
+            // Proteger primeiro admin principal - não permitir rebaixar
+            $primeiroAdminPrincipalId = Usuario::where('is_admin_principal', true)
+                ->orderBy('id', 'asc')
+                ->value('id');
+            
+            if ($usuario->id != $primeiroAdminPrincipalId) {
                 $dados['is_admin_principal'] = $request->has('is_admin_principal');
             }
         }
@@ -190,6 +194,15 @@ class UsuarioController extends Controller
         // Impedir que o usuário desative a si mesmo
         if ($usuario->id === $usuarioLogado->id && !$request->has('ativo')) {
             return back()->with('error', 'Você não pode desativar seu próprio usuário.');
+        }
+
+        // Impedir que primeiro admin principal seja desativado
+        $primeiroAdminPrincipalId = Usuario::where('is_admin_principal', true)
+            ->orderBy('id', 'asc')
+            ->value('id');
+        
+        if ($usuario->id === $primeiroAdminPrincipalId && !$request->has('ativo')) {
+            return back()->with('error', 'O primeiro Admin Principal não pode ser desativado.');
         }
 
         $usuario->update($dados);
@@ -211,9 +224,13 @@ class UsuarioController extends Controller
             return back()->with('error', 'Você não pode excluir seu próprio usuário.');
         }
 
-        // Proteger admin principal
-        if ($usuario->email === 'admin@cimatec.com.br') {
-            return back()->with('error', 'O usuário administrador principal não pode ser excluído.');
+        // Proteger primeiro admin principal (o primeiro criado no sistema)
+        $primeiroAdminPrincipal = Usuario::where('is_admin_principal', true)
+            ->orderBy('id', 'asc')
+            ->first();
+
+        if ($usuario->is_admin_principal && $usuario->id === $primeiroAdminPrincipal?->id) {
+            return back()->with('error', 'O primeiro Admin Principal não pode ser excluído.');
         }
 
         $usuario->delete();

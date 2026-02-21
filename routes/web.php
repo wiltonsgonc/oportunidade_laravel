@@ -6,6 +6,7 @@ use App\Http\Controllers\AuditoriaController;
 use App\Http\Controllers\AnexoController;
 use App\Http\Controllers\RetificacaoController;
 use App\Http\Controllers\Auth\LoginController;
+use App\Http\Controllers\Auth\AuthController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\UsuarioController;
 
@@ -30,11 +31,24 @@ Route::prefix('vagas')->group(function () {
     Route::get('/download/{tipo}/{id}', [VagaController::class, 'download'])->name('vagas.download');
 });
 
-// Autenticação
+// Autenticação SSO (Keycloak)
 Route::middleware('guest')->group(function () {
-    Route::get('/login', [LoginController::class, 'showLoginForm'])->name('login');
-    Route::post('/login', [LoginController::class, 'login']);
+    // Login SSO - redireciona para Keycloak
+    Route::get('/login', [AuthController::class, 'redirect'])->name('login');
+    
+    // Callback do Keycloak
+    Route::get('/auth/callback', [AuthController::class, 'callback'])->name('auth.callback');
+    
+    // Erro na autenticação
+    Route::get('/auth/error', [AuthController::class, 'error'])->name('auth.error');
+
+    // Rotas de login local (apenas para admin em desenvolvimento)
+    Route::get('/login/local', [LoginController::class, 'showLoginForm'])->name('login.local');
+    Route::post('/login/local', [LoginController::class, 'login']);
 });
+
+// Logout
+Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 
 /*
 |--------------------------------------------------------------------------
@@ -42,9 +56,6 @@ Route::middleware('guest')->group(function () {
 |--------------------------------------------------------------------------
 */
 Route::middleware('auth')->group(function () {
-    // Logout
-    Route::post('/logout', [LoginController::class, 'logout'])->name('logout');
-    
     // Dashboard
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
     

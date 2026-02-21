@@ -112,18 +112,22 @@
                                 </a>
 
                                 @php
-                                    $isProtectedAdmin = ($usuario->email === 'admin@cimatec.com.br');
                                     $isSelf = (auth()->id() === $usuario->id);
+                                    // Verificar se é o primeiro admin principal
+                                    $primeiroAdminPrincipalId = \App\Models\Usuario::where('is_admin_principal', true)
+                                        ->orderBy('id', 'asc')
+                                        ->value('id');
+                                    $isPrimeiroAdminPrincipal = ($usuario->is_admin_principal && $usuario->id == $primeiroAdminPrincipalId);
                                 @endphp
 
-                                @if(!$isSelf && !$isProtectedAdmin)
+                                @if(!$isSelf && !$isPrimeiroAdminPrincipal)
                                     <button type="button" class="btn btn-sm btn-danger btn-excluir" 
                                             data-url="{{ route('admin.usuarios.destroy', $usuario->id) }}"
                                             data-tipo="o usuário"
                                             data-nome="{{ $usuario->nome }}">
                                         <i class="bi bi-trash"></i> Excluir
                                     </button>
-                                @elseif($isProtectedAdmin)
+                                @elseif($isPrimeiroAdminPrincipal)
                                     <span class="badge bg-secondary">Protegido</span>
                                 @endif
                             </td>

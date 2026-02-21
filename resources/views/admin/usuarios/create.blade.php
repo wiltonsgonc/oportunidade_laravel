@@ -84,7 +84,7 @@
                                            id="is_admin_principal" name="is_admin_principal" value="1"
                                            {{ old('is_admin_principal') ? 'checked' : '' }}>
                                     <label class="form-check-label" for="is_admin_principal">
-                                        Administrador Principal (acesso total, não pode ser excluído)
+                                        Administrador Principal (acesso total)
                                     </label>
                                 </div>
                             </div>

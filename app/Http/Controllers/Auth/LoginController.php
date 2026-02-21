@@ -11,7 +11,21 @@ use Illuminate\Support\Facades\Hash;
 class LoginController extends Controller
 {
     /**
-     * Mostrar formulário de login
+     * Construtor - apenas permitir acesso em modo desenvolvimento
+     */
+    public function __construct()
+    {
+        // Apenas permitir login local em modo desenvolvimento
+        $this->middleware(function ($request, $next) {
+            if (!filter_var(env('KEYCLOAK_DEV_MODE', false), FILTER_VALIDATE_BOOLEAN)) {
+                return redirect()->route('login');
+            }
+            return $next($request);
+        })->except(['logout']);
+    }
+
+    /**
+     * Mostrar formulário de login local (apenas desenvolvimento)
      */
     public function showLoginForm()
     {
@@ -24,7 +38,7 @@ class LoginController extends Controller
     }
 
     /**
-     * Processar login
+     * Processar login local (apenas desenvolvimento)
      */
     public function login(Request $request)
     {
