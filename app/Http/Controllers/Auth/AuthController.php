@@ -114,11 +114,14 @@ class AuthController extends Controller
 
         if (!$usuario) {
             // Criar usuário mock para desenvolvimento
+            // Senha hash placeholder (não utilizada em modo produção)
+            $senhaPlaceholder = '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi'; // password
+            
             $usuario = Usuario::create([
                 'nome' => 'Desenvolvedor',
                 'usuario' => 'dev',
                 'email' => $developmentEmail,
-                'senha' => '', // Não usada em mock
+                'senha' => $senhaPlaceholder,
                 'is_admin' => true,
                 'is_admin_principal' => true,
                 'ativo' => true,
