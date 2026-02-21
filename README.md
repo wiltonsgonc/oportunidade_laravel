@@ -183,6 +183,43 @@ VALUES (
 
 ---
 
+## Alternativa: Proteder Admin Principal via Banco de Dados
+
+Para ter proteção mais robusta no banco de dados, adicione um campo booleano `primeiro_admin_principal`:
+
+### 1. Criar migration
+
+```bash
+php artisan make:migration add_primeiro_admin_to_usuarios_table
+```
+
+### 2. Editar migration
+
+```php
+Schema::table('usuarios', function (Blueprint $table) {
+    $table->boolean('primeiro_admin_principal')->default(false)->after('is_admin_principal');
+});
+```
+
+### 3. Atualizar seed
+
+No `AdminUserSeeder`, definir o primeiro admin como principal:
+
+```php
+'primeiro_admin_principal' => true,
+```
+
+### 4. Atualizar controller
+
+```php
+// Proteger via banco
+if ($usuario->primeiro_admin_principal) {
+    return back()->with('error', 'O primeiro Admin Principal não pode ser excluído.');
+}
+```
+
+---
+
 ## Executando a Aplicação
 
 ### Servidor de Desenvolvimento
