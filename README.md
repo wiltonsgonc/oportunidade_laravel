@@ -144,79 +144,28 @@ Para desenvolvimento local sem Keycloak:
 
 ```env
 KEYCLOAK_DEV_MODE=true
-KEYCLOAK_DEV_MOCK_EMAIL=seu-email@localhost
+KEYCLOAK_DEV_MOCK_EMAIL=admin@cimatec.edu.br
 ```
 
 Neste modo, o login será automático com o usuário especificado.
 
 ---
 
-## Desativar SSO e Voltar ao Login Local
+## Modo Produção
 
-Para desativar o SSO (Keycloak) e usar o sistema de login local tradicional:
+Para ambiente de produção (SSO obrigatório):
 
 ```env
 KEYCLOAK_DEV_MODE=false
 ```
 
-Com essa configuração:
-- Acesse `/login` para ver o formulário de login local
-- Ou use a rota `/login/local` diretamente
-- Funciona com usuário/senha cadastrados no banco
-
-### Criar usuário para teste (via SQL):
-
-```sql
-INSERT INTO usuarios (nome, usuario, email, senha, is_admin, is_admin_principal, ativo, created_at, updated_at)
-VALUES (
-    'Administrador',
-    'admin',
-    'admin@exemplo.com',
-    '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', -- senha: password
-    1,
-    1,
-    1,
-    NOW(),
-    NOW()
-);
-```
+**Configurações obrigatórias do Keycloak:**
+- `KEYCLOAK_BASE_URL` - URL do servidor Keycloak
+- `KEYCLOAK_REALM` - Nome do realm
+- `KEYCLOAK_CLIENT_ID` - ID do cliente
+- `KEYCLOAK_CLIENT_SECRET` - Segredo do cliente
 
 ---
-
-## Alternativa: Proteder Admin Principal via Banco de Dados
-
-Para ter proteção mais robusta no banco de dados, adicione um campo booleano `primeiro_admin_principal`:
-
-### 1. Criar migration
-
-```bash
-php artisan make:migration add_primeiro_admin_to_usuarios_table
-```
-
-### 2. Editar migration
-
-```php
-Schema::table('usuarios', function (Blueprint $table) {
-    $table->boolean('primeiro_admin_principal')->default(false)->after('is_admin_principal');
-});
-```
-
-### 3. Atualizar seed
-
-No `AdminUserSeeder`, definir o primeiro admin como principal:
-
-```php
-'primeiro_admin_principal' => true,
-```
-
-### 4. Atualizar controller
-
-```php
-// Proteger via banco
-if ($usuario->primeiro_admin_principal) {
-    return back()->with('error', 'O primeiro Admin Principal não pode ser excluído.');
-}
-```
 
 ---
 

@@ -9,11 +9,12 @@ services:
     build:
       context: .
       dockerfile: docker/Dockerfile.prod
-    container_name: laravel_app
+    container_name: oportunidade
     restart: unless-stopped
-    # Sem volumes - código está na imagem
+    volumes:
+      - ./storage:/var/www/storage
     networks:
-      - laravel
+      - oportunidade
       - traefik_public
     depends_on:
       - db
@@ -45,7 +46,7 @@ services:
     depends_on:
       - app
     networks:
-      - laravel
+      - oportunidade
     labels:
       - "traefik.enable=true"
       - "traefik.http.routers.webserver.rule=Host(`oportunidades.senai.br`)"
@@ -73,7 +74,7 @@ services:
       - dbdata:/var/lib/mysql
       - ./docker/mysql/my.cnf:/etc/mysql/conf.d/custom.cnf:ro
     networks:
-      - laravel
+      - oportunidade
 
   # -------- Redis (Cache/Sessions/Queues) --------
   redis:
@@ -84,10 +85,10 @@ services:
     volumes:
       - redisdata:/data
     networks:
-      - laravel
+      - oportunidade
 
 networks:
-  laravel:
+  oportunidade:
     driver: bridge
   traefik_public:
     external: true
