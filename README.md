@@ -55,6 +55,7 @@ cp .env.dev .env  # Para desenvolvimento
 ### 4. Gerar Chave da Aplicação
 
 ```bash
+php artisan migrate
 php artisan key:generate
 ```
 
