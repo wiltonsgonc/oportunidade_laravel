@@ -258,6 +258,11 @@ class VagaController extends Controller
         // Processar upload do arquivo do edital
         if ($request->hasFile('arquivo_edital')) {
             $arquivo = $request->file('arquivo_edital');
+
+            if (!in_array($arquivo->getMimeType(), ['application/pdf', 'application/msword', 'application/vnd.openxmlformats-officedocument.wordprocessingml.document', 'application/vnd.oasis.opendocument.text'])) {
+                return back()->with('error', 'Tipo de arquivo do edital não permitido.');
+            }
+
             $nomeOriginal = $arquivo->getClientOriginalName();
             $hashEdital = hash_file('sha256', $arquivo->getRealPath());
             
@@ -339,6 +344,12 @@ class VagaController extends Controller
 
         // Processar upload de arquivos
         if ($request->hasFile('arquivo_edital')) {
+            $arquivo = $request->file('arquivo_edital');
+
+            if (!in_array($arquivo->getMimeType(), ['application/pdf', 'application/msword', 'application/vnd.openxmlformats-officedocument.wordprocessingml.document', 'application/vnd.oasis.opendocument.text'])) {
+                return back()->with('error', 'Tipo de arquivo do edital não permitido.');
+            }
+
             // Remover arquivo antigo se existir
             if ($vaga->arquivo_edital && $vaga->arquivo_edital !== '0') {
                 $caminhoAntigo = storage_path('app/public/' . $vaga->arquivo_edital);
@@ -352,10 +363,10 @@ class VagaController extends Controller
                 mkdir($diretorio, 0755, true);
             }
             
-            $nomeOriginal = $request->file('arquivo_edital')->getClientOriginalName();
+            $nomeOriginal = $arquivo->getClientOriginalName();
             $nomeUnico = uniqid() . '_' . $nomeOriginal;
             $caminhoCompleto = $diretorio . '/' . $nomeUnico;
-            $request->file('arquivo_edital')->move($diretorio, $nomeUnico);
+            $arquivo->move($diretorio, $nomeUnico);
             
             $validated['arquivo_edital'] = 'vagas/editais/' . $nomeUnico;
             $validated['nome_original_edital'] = $nomeOriginal;
@@ -363,6 +374,12 @@ class VagaController extends Controller
         }
 
         if ($request->hasFile('arquivo_resultados')) {
+            $arquivo = $request->file('arquivo_resultados');
+
+            if (!in_array($arquivo->getMimeType(), ['application/pdf', 'application/msword', 'application/vnd.openxmlformats-officedocument.wordprocessingml.document', 'application/vnd.oasis.opendocument.text'])) {
+                return back()->with('error', 'Tipo de arquivo de resultados não permitido.');
+            }
+
             // Remover arquivo antigo se existir
             if ($vaga->arquivo_resultados && $vaga->arquivo_resultados !== '0') {
                 $caminhoAntigo = storage_path('app/public/' . $vaga->arquivo_resultados);
