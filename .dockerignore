@@ -10,5 +10,12 @@ node_modules
 /storage/framework/sessions
 /storage/framework/views
 tests
-docker
 *.md
+
+# Ignorar docker exceto configurações necessárias para build
+docker
+!docker/php
+!docker/nginx
+!docker/mysql
+!docker/Dockerfile.dev
+!docker/Dockerfile.prod
