@@ -43,16 +43,32 @@ COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 # Copiar configuração PHP para produção
 COPY docker/php/php.prod.ini /usr/local/etc/php/conf.d/custom.ini
 
+# Limpar arquivos de desenvolvimento do container
+RUN rm -rf \
+    tests \
+    .git \
+    .github \
+    docker \
+    .env \
+    .env.example \
+    .env.dev \
+    .env.prod \
+    .gitignore \
+    .gitattributes \
+    docker-compose.yml \
+    docker-compose.*.yml \
+    phpunit.xml \
+    *.md \
+    node_modules \
+    .vscode \
+    .idea
+
 # Otimizar autoloader e cache
 RUN composer dump-autoload --optimize --classmap-authoritative \
     && php artisan config:cache \
     && php artisan route:cache \
     && php artisan view:cache \
     && rm /usr/bin/composer
-
-# Limpar arquivos desnecessários
-RUN rm -rf tests .git .github docker \
-    && rm -f .env.example .gitignore .gitattributes phpunit.xml
 
 RUN chown -R www-data:www-data /var/www/storage /var/www/bootstrap/cache
 
