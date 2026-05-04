@@ -27,6 +27,13 @@ WORKDIR /var/www
 
 COPY docker/php/php.dev.ini /usr/local/etc/php/conf.d/custom.ini
 
+COPY . .
+
+RUN composer install --no-interaction --no-dev --prefer-dist --no-scripts
+
+RUN chmod +x /var/www/docker/entrypoint.sh
+
 EXPOSE 9000
 
+ENTRYPOINT ["docker/entrypoint.sh"]
 CMD ["php-fpm"]

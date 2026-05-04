@@ -56,8 +56,11 @@ RUN rm -rf tests .git .github docker \
 
 RUN chown -R www-data:www-data /var/www/storage /var/www/bootstrap/cache
 
+RUN chmod +x /var/www/docker/entrypoint.sh
+
 USER www-data
 
 EXPOSE 9000
 
+ENTRYPOINT ["docker/entrypoint.sh"]
 CMD ["php-fpm"]
