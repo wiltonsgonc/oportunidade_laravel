@@ -24,9 +24,3 @@ docker
 !composer.json
 !composer.lock
 !docker/entrypoint.sh
-
-# Arquivos de desenvolvimento (não copiar para produção)
-docker/Dockerfile.dev
-docker/php/php.dev.ini
-docker/nginx/conf.d/default.dev.conf
-docker/nginx/nginx.dev.conf
