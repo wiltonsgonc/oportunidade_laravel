@@ -105,7 +105,7 @@
                                                     <i class="bi bi-download"></i>
                                                 </a>
                                                 <button type="button" class="btn btn-outline-danger btn-excluir-retificacao" 
-                                                        onclick="excluirRetificacao({{ $retificacao->id }})" title="Excluir">
+                                                        data-retificacao-id="{{ $retificacao->id }}" title="Excluir">
                                                     <i class="bi bi-trash"></i>
                                                 </button>
                                             </div>
@@ -129,4 +129,5 @@
 
 @push('scripts')
 <script src="{{ asset('assets/js/upload.js') }}"></script>
+<script src="{{ asset('assets/js/vagas-handlers.js') }}"></script>
 @endpush

@@ -213,8 +213,9 @@
                                                     <i class="bi bi-eye"></i>
                                                 </a>
                                                 @if($podeEditar)
-                                                <button type="button" class="btn btn-outline-danger" 
-                                                        onclick="confirmarExclusaoArquivo('{{ route('vagas.excluir-arquivo', ['id' => $vaga->id, 'tipo' => 'edital']) }}', 'edital')"
+                                                <button type="button" class="btn btn-outline-danger btn-confirmar-exclusao-arquivo" 
+                                                        data-url="{{ route('vagas.excluir-arquivo', ['id' => $vaga->id, 'tipo' => 'edital']) }}"
+                                                        data-tipo="edital"
                                                         title="Excluir">
                                                     <i class="bi bi-trash"></i>
                                                 </button>
@@ -252,8 +253,9 @@
                                                     <i class="bi bi-eye"></i>
                                                 </a>
                                                 @if($podeEditar)
-                                                <button type="button" class="btn btn-outline-danger" 
-                                                        onclick="confirmarExclusaoArquivo('{{ route('vagas.excluir-arquivo', ['id' => $vaga->id, 'tipo' => 'resultados']) }}', 'resultados')"
+                                                <button type="button" class="btn btn-outline-danger btn-confirmar-exclusao-arquivo" 
+                                                        data-url="{{ route('vagas.excluir-arquivo', ['id' => $vaga->id, 'tipo' => 'resultados']) }}"
+                                                        data-tipo="resultados"
                                                         title="Excluir">
                                                     <i class="bi bi-trash"></i>
                                                 </button>
@@ -325,4 +327,5 @@
 
 @push('scripts')
 <script src="{{ asset('assets/js/form_logic.js') }}"></script>
+<script src="{{ asset('assets/js/vagas-handlers.js') }}"></script>
 @endpush
