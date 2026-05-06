@@ -107,15 +107,22 @@ class AuthController extends Controller
      */
     protected function handleDevelopmentLogin(): RedirectResponse
     {
-        $developmentEmail = config('keycloak.dev_mock_email', 'admin@cimatec.edu.br');
+        $developmentEmail = config('keycloak.dev_mock_email');
+        
+        if (!$developmentEmail) {
+            return redirect()->route('login')->with('error', 'Configure KEYCLOAK_DEV_MOCK_EMAIL no .env');
+        }
 
         // Buscar usuário existente ou criar mock
         $usuario = Usuario::where('email', $developmentEmail)->first();
 
-        if (!$usuario) {
+        if (app()->environment('local') && !$usuario) {
             // Criar usuário mock para desenvolvimento
-            // Senha hash placeholder (não utilizada em modo produção)
-            $senhaPlaceholder = '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi'; // password
+            $senhaPlaceholder = config('keycloak.dev_mock_password_hash');
+            
+            if (!$senhaPlaceholder) {
+                return redirect()->route('login')->with('error', 'Configure KEYCLOAK_DEV_MOCK_PASSWORD_HASH no .env');
+            }
             
             $usuario = Usuario::create([
                 'nome' => 'Desenvolvedor',
@@ -140,6 +147,10 @@ class AuthController extends Controller
      */
     public function developmentUsers(Request $request): \Illuminate\Http\JsonResponse
     {
+        if (!app()->environment('local')) {
+            abort(404);
+        }
+
         if (!$this->keycloakService->isDevelopmentMode()) {
             return response()->json(['error' => 'Modo de desenvolvimento não habilitado'], 403);
         }
@@ -156,6 +167,10 @@ class AuthController extends Controller
      */
     public function loginAs(Request $request, int $userId): RedirectResponse
     {
+        if (!app()->environment('local')) {
+            abort(404);
+        }
+
         if (!$this->keycloakService->isDevelopmentMode()) {
             abort(403, 'Apenas disponível em modo de desenvolvimento');
         }
