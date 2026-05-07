@@ -41,6 +41,10 @@ class RetificacaoController extends Controller
             ]);
 
             $arquivo = $request->file('retificacao');
+
+            if (!in_array($arquivo->getMimeType(), ['application/pdf', 'application/msword', 'application/vnd.openxmlformats-officedocument.wordprocessingml.document', 'application/vnd.oasis.opendocument.text'])) {
+                return response()->json(['error' => 'Tipo de arquivo não permitido.'], 422);
+            }
             $nomeOriginal = $arquivo->getClientOriginalName();
             $hash = hash_file('sha256', $arquivo->getRealPath());
             

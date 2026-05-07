@@ -4,31 +4,36 @@ namespace Database\Seeders;
 
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Hash;
 use Carbon\Carbon;
 
 class AdminUserSeeder extends Seeder
 {
     public function run()
     {
+        $email = config('keycloak.dev_admin_email');
+        $passwordHash = config('keycloak.dev_admin_password_hash');
+
+        if (!$email) {
+            $this->command->error('Configure KEYCLOAK_DEV_ADMIN_EMAIL no .env');
+            return;
+        }
+
+        if (!$passwordHash) {
+            $this->command->error('Configure KEYCLOAK_DEV_ADMIN_PASSWORD_HASH no .env');
+            return;
+        }
+
         $this->command->info('=== CRIANDO USUÁRIO ADMINISTRADOR ===');
-        
-        // Primeiro, deletar qualquer usuário existente para evitar duplicação
-        DB::table('usuarios')->where('usuario', 'admin')->orWhere('email', 'admin@senai.com')->delete();
-        
-        // Hash da senha 'password'
-        $senhaHash = Hash::make('password');
-        
-        $this->command->info("Hash gerado para 'password': " . $senhaHash);
-        
-        // Inserir o usuário admin diretamente via SQL para garantir
+
+        DB::table('usuarios')->where('email', $email)->delete();
+
         $now = Carbon::now();
-        
+
         $id = DB::table('usuarios')->insertGetId([
             'nome' => 'Administrador',
             'usuario' => 'admin',
-            'email' => 'admin@senai.com',
-            'senha' => $senhaHash,
+            'email' => $email,
+            'senha' => $passwordHash,
             'is_admin' => 1,
             'is_admin_principal' => 1,
             'ativo' => 1,
@@ -41,25 +46,8 @@ class AdminUserSeeder extends Seeder
             'updated_at' => $now,
             'deleted_at' => null,
         ]);
-        
+
         $this->command->info('✓ Usuário admin criado com ID: ' . $id);
-        $this->command->info('Usuário: admin');
-        $this->command->info('E-mail: admin@senai.com');
-        $this->command->info('Senha: password');
-        
-        // Verificar se foi criado corretamente
-        $usuario = DB::table('usuarios')->find($id);
-        if ($usuario) {
-            $this->command->info('✓ Verificação: Usuário encontrado no banco');
-            
-            // Verificar se a senha está correta
-            if (Hash::check('password', $usuario->senha)) {
-                $this->command->info('✓ Verificação: Senha "password" está correta');
-            } else {
-                $this->command->error('✗ ERRO: Senha não corresponde ao hash');
-            }
-        } else {
-            $this->command->error('✗ ERRO: Usuário não foi criado');
-        }
+        $this->command->info('E-mail: ' . $email);
     }
 }

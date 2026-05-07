@@ -10,7 +10,12 @@ return [
     
     // Modo desenvolvimento (sem Keycloak)
     'dev_mode' => env('KEYCLOAK_DEV_MODE', false),
-    'dev_mock_email' => env('KEYCLOAK_DEV_MOCK_EMAIL', 'admin@cimatec.edu.br'),
+    'dev_mock_email' => env('KEYCLOAK_DEV_MOCK_EMAIL'),
+    'dev_mock_password_hash' => env('KEYCLOAK_DEV_MOCK_PASSWORD_HASH'),
+
+    // Usuário admin (seeder)
+    'dev_admin_email' => env('KEYCLOAK_DEV_ADMIN_EMAIL'),
+    'dev_admin_password_hash' => env('KEYCLOAK_DEV_ADMIN_PASSWORD_HASH'),
     
     // URLs do Keycloak
     'urls' => [

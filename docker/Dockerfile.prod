@@ -9,8 +9,9 @@ RUN apk add --no-cache \
     zip \
     unzip \
     curl \
-    git \
-    && docker-php-ext-install pdo_mysql mbstring exif pcntl bcmath gd zip opcache
+    && docker-php-ext-install pdo_mysql mbstring exif pcntl bcmath gd zip opcache \
+    && pecl install redis \
+    && docker-php-ext-enable redis
 
 # ========== Stage: Composer Dependencies ==========
 FROM base AS composer-deps
@@ -42,6 +43,28 @@ COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 # Copiar configuração PHP para produção
 COPY docker/php/php.prod.ini /usr/local/etc/php/conf.d/custom.ini
 
+# Copiar configuração de produção
+COPY --chown=www-data:www-data .env.prod /var/www/.env
+
+# Limpar arquivos de desenvolvimento do container
+RUN rm -rf \
+    tests \
+    .git \
+    .github \
+    docker \
+    .env \
+    .env.example \
+    .env.dev \
+    .gitignore \
+    .gitattributes \
+    docker-compose.yml \
+    docker-compose.*.yml \
+    phpunit.xml \
+    *.md \
+    node_modules \
+    .vscode \
+    .idea
+
 # Otimizar autoloader e cache
 RUN composer dump-autoload --optimize --classmap-authoritative \
     && php artisan config:cache \
@@ -49,14 +72,13 @@ RUN composer dump-autoload --optimize --classmap-authoritative \
     && php artisan view:cache \
     && rm /usr/bin/composer
 
-# Limpar arquivos desnecessários
-RUN rm -rf tests .git .github docker \
-    && rm -f .env.example .gitignore .gitattributes phpunit.xml
-
 RUN chown -R www-data:www-data /var/www/storage /var/www/bootstrap/cache
+
+RUN chmod +x /var/www/docker/entrypoint.sh
 
 USER www-data
 
 EXPOSE 9000
 
+ENTRYPOINT ["docker/entrypoint.sh"]
 CMD ["php-fpm"]

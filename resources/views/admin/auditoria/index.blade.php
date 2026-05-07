@@ -96,8 +96,8 @@
                                 <td>{{ $registro->created_at->format('d/m/Y H:i') }}</td>
                                 <td>{{ $registro->dados_vaga['edital'] ?? 'N/A' }}</td>
                                 <td>
-                                    <button type="button" class="btn btn-sm btn-info"
-                                        onclick="visualizarDetalhes({{ $registro->id }})">
+                                    <button type="button" class="btn btn-sm btn-info btn-visualizar-detalhes"
+                                        data-id="{{ $registro->id }}">
                                         <i class="bi bi-eye"></i> Detalhes
                                     </button>
                                 </td>
@@ -137,12 +137,14 @@
                                 <td>{{ $vaga->programa_curso_area }}</td>
                                 <td>{{ $vaga->data_limite ? $vaga->data_limite->format('d/m/Y') : 'N/A' }}</td>
                                 <td>
-                                    <button type="button" class="btn btn-sm btn-success" 
-                                            onclick="confirmarRestauracao({{ $vaga->id }}, '{{ addslashes($vaga->programa_curso_area) }}');">
+                                    <button type="button" class="btn btn-sm btn-success btn-restaurar" 
+                                            data-id="{{ $vaga->id }}"
+                                            data-nome="{{ $vaga->programa_curso_area }}">
                                         <i class="bi bi-arrow-counterclockwise"></i> Restaurar
                                     </button>
-                                    <button type="button" class="btn btn-sm btn-danger"
-                                            onclick="confirmarExclusaoPermanente({{ $vaga->id }}, '{{ addslashes($vaga->programa_curso_area) }}');">
+                                    <button type="button" class="btn btn-sm btn-danger btn-excluir-permanente"
+                                            data-id="{{ $vaga->id }}"
+                                            data-nome="{{ $vaga->programa_curso_area }}">
                                         <i class="bi bi-trash"></i> Excluir Permanentemente
                                     </button>
                                 </td>
@@ -185,4 +187,5 @@
 
 @push('scripts')
 <script src="{{ asset('assets/js/admin.js') }}"></script>
+<script src="{{ asset('assets/js/admin-handlers.js') }}"></script>
 @endpush

@@ -13,9 +13,14 @@ class KeycloakAuthService
 
     /**
      * Verificar se está em modo desenvolvimento (sem Keycloak)
+     * Em produção, o modo desenvolvimento é sempre desabilitado
      */
     public function isDevelopmentMode(): bool
     {
+        if (app()->environment('production')) {
+            return false;
+        }
+
         return filter_var(env('KEYCLOAK_DEV_MODE', false), FILTER_VALIDATE_BOOLEAN);
     }
 

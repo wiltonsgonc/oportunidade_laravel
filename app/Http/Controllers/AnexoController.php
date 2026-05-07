@@ -29,6 +29,10 @@ class AnexoController extends Controller
             ]);
 
             $arquivo = $request->file('anexo');
+
+            if (!in_array($arquivo->getMimeType(), ['application/pdf', 'application/msword', 'application/vnd.openxmlformats-officedocument.wordprocessingml.document', 'application/vnd.oasis.opendocument.text'])) {
+                return response()->json(['error' => 'Tipo de arquivo não permitido.'], 422);
+            }
             $nomeOriginal = $arquivo->getClientOriginalName();
             $tamanho = $arquivo->getSize();
             $mimeType = $arquivo->getMimeType();

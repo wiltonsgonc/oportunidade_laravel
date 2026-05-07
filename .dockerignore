@@ -1,0 +1,27 @@
+.env
+.env.dev
+.env.prod
+.git
+.github
+node_modules
+/public/build
+/storage/logs/*
+/storage/logs/.gitignore
+/storage/framework/cache
+/storage/framework/sessions
+/storage/framework/views
+tests
+*.md
+
+# Ignorar docker exceto configurações necessárias para build
+docker
+!docker/php
+!docker/nginx
+!docker/mysql
+!docker/Dockerfile.dev
+!docker/Dockerfile.prod
+
+# Arquivos Laravel necessários para build
+!composer.json
+!composer.lock
+!docker/entrypoint.sh

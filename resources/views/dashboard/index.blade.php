@@ -129,7 +129,7 @@
                                            class="btn btn-outline-danger btn-sm btn-delete" 
                                            data-id="{{ $vaga->id }}" 
                                            data-edital="{{ $vaga->edital }}"
-                                           onclick="event.preventDefault(); confirmarExclusao('{{ route('vagas.destroy', $vaga->id) }}', 'a vaga', '{{ addslashes($vaga->edital) }}');"
+                                           data-url="{{ route('vagas.destroy', $vaga->id) }}"
                                            title="Excluir">
                                             <i class="bi bi-trash"></i>
                                         </a>
@@ -159,6 +159,10 @@
         </div>
     </div>
 </div>
+
+@push('scripts')
+<script src="{{ asset('assets/js/vagas-handlers.js') }}"></script>
+@endpush
 @endsection
 
 

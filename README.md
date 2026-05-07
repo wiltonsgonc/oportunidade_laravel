@@ -46,83 +46,160 @@ composer install
 
 ### 3. Configurar Arquivo de Ambiente
 
+Os arquivos `.env` não são enviados ao repositório por segurança. Use o modelo disponível:
+
 ```bash
-cp .env.example .env
-# ou
-cp .env.dev .env  # Para desenvolvimento
+# Para desenvolvimento
+cp .env.dev .env
 ```
 
-### 4. Gerar Chave da Aplicação
+**Nota:** Para ambiente de produção, o Dockerfile.prod já copia automaticamente o arquivo `.env.prod` para `.env`, não sendo necessário executar esse comando manualmente.
+
+---
+
+## Configuração de Variáveis de Ambiente
+
+### Variáveis Obrigatórias (Todos os Ambientes)
+
+| Variável | Descrição | Exemplo |
+|---------|-----------|--------|
+| `APP_NAME` | Nome da aplicação | Oportunidade |
+| `APP_ENV` | Ambiente | local, production |
+| `APP_KEY` | Chave da aplicação | `base64:...` (gerar com `php artisan key:generate`) |
+| `APP_DEBUG` | Modo debug | true (dev) / false (prod) |
+| `APP_URL` | URL da aplicação | http://localhost:8000 ou https://seudominio.com.br |
+| `APP_LOCALE` | Idioma padrão | pt_BR |
+| `APP_FALLBACK_LOCALE` | Idioma alternativo | en |
+| `APP_FAKER_LOCALE` | Idioma para dados fake | pt_BR |
+| `APP_MAINTENANCE_DRIVER` | Driver de manutenção | file |
+
+### Variáveis de Banco de Dados
+
+| Variável | Descrição | Desenvolvimento | Produção |
+|---------|-----------|---------------|----------|
+| `DB_CONNECTION` | Driver do banco | mysql | mysql |
+| `DB_HOST` | Host do banco | 127.0.0.1 | mysql_db |
+| `DB_PORT` | Porta do banco | 3306 | 3306 |
+| `DB_DATABASE` | Nome do banco | oportunidade | oportunidade |
+| `DB_USERNAME` | Usuário do banco | oportunidad | oportunidad |
+| `DB_PASSWORD` | Senha do banco | (sua senha) | (senha forte) |
+| `DB_ROOT_PASSWORD` | Senha root | (opcional) | (senha forte) |
+
+### Variáveis de Redis
+
+| Variável | Descrição | Desenvolvimento | Produção |
+|---------|-----------|---------------|----------|
+| `REDIS_HOST` | Host do Redis | 127.0.0.1 | redis_prod |
+| `REDIS_PASSWORD` | Senha do Redis | (vazio) | (senha forte) |
+| `REDIS_PORT` | Porta do Redis | 6379 | 6379 |
+
+### Variáveis de Sessão e Cache
+
+| Variável | Desenvolvimento | Produção |
+|---------|---------------|----------|
+| `SESSION_DRIVER` | database | redis |
+| `SESSION_LIFETIME` | 120 | 120 |
+| `SESSION_ENCRYPT` | false | true |
+| `CACHE_STORE` | file | redis |
+| `BROADCAST_CONNECTION` | log | redis |
+| `QUEUE_CONNECTION` | sync | redis |
+
+### Variáveis de Session (Produção)
+
+```env
+SESSION_DRIVER=redis
+SESSION_LIFETIME=120
+SESSION_ENCRYPT=true
+SESSION_PATH=/
+SESSION_DOMAIN=seudominio.com.br
+SESSION_SECURE_COOKIE=true
+```
+
+### Variáveis do Keycloak (SSO)
+
+| Variável | Descrição | Desenvolvimento | Produção |
+|---------|-----------|---------------|----------|
+| `KEYCLOAK_BASE_URL` | URL do Keycloak | https://keycloak.local | https://keycloak.sua-empresa.com.br |
+| `KEYCLOAK_REALM` | Nome do realm | senai-cimatec | senai-cimatec |
+| `KEYCLOAK_CLIENT_ID` | ID do client | vagas-senai | vagas-senai |
+| `KEYCLOAK_CLIENT_SECRET` | Segredo do client | (chave_teste) | (gerar no Keycloak) |
+| `KEYCLOAK_REDIRECT_URI` | URL de callback | http://localhost:8000/auth/callback | https://seudominio.com.br/auth/callback |
+| `KEYCLOAK_LOGOUT_URI` | URL de logout | http://localhost:8000/logout | https://seudominio.com.br/logout |
+| `KEYCLOAK_DEV_MODE` | Modo desenvolvimento | true | false |
+| `KEYCLOAK_DEV_MOCK_EMAIL` | Email para mock | admin@cimatec.edu.br | - |
+| `KEYCLOAK_DEV_MOCK_PASSWORD_HASH` | Hash bcrypt da senha | (gerar com tinker) | - |
+| `KEYCLOAK_DEV_ADMIN_EMAIL` | Email do admin (seeder) | admin@senai.com | - |
+| `KEYCLOAK_DEV_ADMIN_PASSWORD_HASH` | Hash bcrypt da senha admin | (gerar com tinker) | - |
+
+**Configuração de Desenvolvimento:**
+```env
+KEYCLOAK_DEV_MODE=true
+KEYCLOAK_DEV_MOCK_EMAIL=admin@cimatec.edu.br
+KEYCLOAK_DEV_MOCK_PASSWORD_HASH='$2y$10$...'
+```
+
+**Configuração de Produção:**
+```env
+KEYCLOAK_DEV_MODE=false
+KEYCLOAK_BASE_URL=https://keycloak.sua-empresa.com.br
+KEYCLOAK_REALM=senai-cimatec
+KEYCLOAK_CLIENT_ID=vagas-senai
+KEYCLOAK_CLIENT_SECRET=chave_gerada_no_keycloak
+```
+
+### Variáveis de Log
+
+| Variável | Desenvolvimento | Produção |
+|---------|---------------|----------|
+| `LOG_CHANNEL` | stack | stack |
+| `LOG_STACK` | single | single |
+| `LOG_DEPRECATIONS_CHANNEL` | null | null |
+| `LOG_LEVEL` | debug | warning |
+
+---
+
+## Executando a Aplicação
+
+### Desenvolvimento Local (sem Docker)
 
 ```bash
 php artisan key:generate
+php artisan migrate
+php artisan serve
 ```
 
-### 5. Configurar Banco de Dados
+Acesse: `http://localhost:8000`
 
-Edite o arquivo `.env` com as credenciais do banco:
+### Gerando Hash de Senha para Desenvolvimento
+
+Para configurar a senha do usuário mock em desenvolvimento, gere a hash usando o Laravel Tinker:
+
+```bash
+php artisan tinker
+>>> echo password_hash('password', PASSWORD_BCRYPT, ['cost' => 10]);
+```
+
+Copie a hash gerada e adicione no `.env`:
 
 ```env
-DB_CONNECTION=mysql
-DB_HOST=127.0.0.1
-DB_PORT=3306
-DB_DATABASE=oportunidade
-DB_USERNAME=seu_usuario
-DB_PASSWORD=sua_senha
+KEYCLOAK_DEV_MOCK_PASSWORD_HASH='$2y$10$...'
 ```
 
-### 6. Executar Migrações
+Substitua `password` pela senha desejada.
+
+### Desenvolvimento com Docker
 
 ```bash
-php artisan migrate
-```
+# Desenvolvimento
+podman compose -f docker-compose.yml up -d --build
 
-### 7. (Opcional) Popular Dados Iniciais
-
-```bash
-php artisan db:seed
-```
-
-### 8. Criar Link Simbólico para Arquivos
-
-```bash
-php artisan storage:link
+# Produção
+podman compose -f docker-compose.prod.yml up -d --build
 ```
 
 ---
 
-## Configuração
-
-### Autenticação SSO (Keycloak)
-
-O sistema suporta autenticação via Single Sign-On (SSO) com Keycloak.
-
-#### Variáveis de Ambiente
-
-```env
-# URL Base do Keycloak
-KEYCLOAK_BASE_URL=https://keycloak.sua-empresa.com.br
-
-# Realm configurado no Keycloak
-KEYCLOAK_REALM=senai-cimatec
-
-# Client ID cadastrado no Keycloak
-KEYCLOAK_CLIENT_ID=vagas-senai
-
-# Client Secret (gerado no Keycloak)
-KEYCLOAK_CLIENT_SECRET=sua_chave_secreta
-
-# URL de callback após autenticação
-KEYCLOAK_REDIRECT_URI=https://seudominio.com.br/auth/callback
-
-# Modo desenvolvimento (true = sem Keycloak)
-KEYCLOAK_DEV_MODE=false
-
-# Email para login automático em modo desenvolvimento
-KEYCLOAK_DEV_MOCK_EMAIL=admin@cimatec.edu.br
-```
-
-#### Configuração no Keycloak
+## Configuração do Keycloak (Produção)
 
 1. Acesse o painel administrativo do Keycloak
 2. Crie um novo Client com as seguintes configurações:
@@ -134,65 +211,269 @@ KEYCLOAK_DEV_MOCK_EMAIL=admin@cimatec.edu.br
 3. Configure as Roles:
    - `vagas-admin` - Acesso administrativo
    - `vagas-admin-principal` - Acesso de administrador principal
-4. Gere o Client Secret e adicione ao `.env`
+4. Gere o Client Secret:
+   - No painel do Keycloak, vá em **Clients** → **vagas-senai** → **Credentials**
+   - Clique em **Regenerate** ou copie o **Client Secret** existente
+5. Adicione ao `.env.prod`:
+   ```env
+   KEYCLOAK_CLIENT_SECRET=seu_client_secret_aqui
+   ```
+
+### Exemplos de Client Secret
+
+| Tipo | Exemplo |
+|------|---------|
+| Gerado pelo Keycloak | `a1b2c3d4-e5f6-g7h8-i9j0-k1l2m3n4o5p6` |
+| Para desenvolvimento | `teste` (apenas para teste local) |
 
 ---
 
-## Modo Desenvolvimento
+## Níveis de Usuário
 
-Para desenvolvimento local sem Keycloak:
+O sistema possui três níveis de acesso:
 
-```env
-KEYCLOAK_DEV_MODE=true
-KEYCLOAK_DEV_MOCK_EMAIL=admin@cimatec.edu.br
+| Nível | Permissão | Acesso |
+|------|-----------|--------|
+| **Padrão** | Restrito | Apenas às vagas criadas por ele |
+| **Admin** | Administrativo | Gerenciar todas as vagas e usuários não admin |
+| **Admin Principal** | Total | Acesso completo ao sistema, incluindo gestão de admins |
+
+### Detalhamento das Permissões
+
+#### Usuário Padrão
+- Criar novas vagas
+- Editar e excluir vagas criadas por ele
+- Acompanhar status das vagas
+- Upload de editais e resultados
+
+#### Admin (is_admin = true)
+- Todas as permissões de usuário padrão
+- Visualizar todas as vagas do sistema
+- Editar e excluir qualquer vaga
+- Gerenciar usuários (criar, editar, excluir)
+- Acessar área administrativa
+
+
+#### Admin Principal (is_admin_principal = true)
+- Todas as permissões de Admin
+- Criar e remover outros administradores
+- Acessar configurações do sistema
+- Histórico de auditoria
+- Restaurar/excluir permanentemente registro/vaga da lixeira
+
+### Criação de Usuários em Produção
+
+Em produção, os usuários são criados automaticamente via **JIT (Just-In-Time Provisioning)**:
+
+1. Usuário faz login via Keycloak (SSO)
+2. Sistema verifica se já existe no banco de dados
+3. Se não existir, cria automaticamente mapeando as roles do Keycloak
+
+**Mapeamento de roles Keycloak → Sistema:**
+```
+vagas-admin-principal → Admin Principal (is_admin_principal + is_admin)
+vagas-admin          → Admin (is_admin)
+(outro/nenhum)     → Usuário Padrão (is_admin = false)
 ```
 
-Neste modo, o login será automático com o usuário especificado.
+### Criação do Admin Inicial em Produção
+
+O admin inicial pode ser criado automaticamente no primeiro deploy:
+
+1. Configure o `.env.prod`:
+   ```env
+   KEYCLOAK_DEV_ADMIN_EMAIL=admin@seudominio.com.br
+   KEYCLOAK_DEV_ADMIN_PASSWORD_HASH='$2y$12$...'
+   ```
+
+2. Execute o build:
+   ```bash
+   docker-compose -f docker-compose.prod.yml up -d --build
+   ```
+
+3. O entrypoint.sh criará o usuário automaticamente se não existir admin principal no banco.
 
 ---
 
-## Modo Produção
+## Build para Produção
 
-Para ambiente de produção (SSO obrigatório):
-
-```env
-KEYCLOAK_DEV_MODE=false
-```
-
-**Configurações obrigatórias do Keycloak:**
-- `KEYCLOAK_BASE_URL` - URL do servidor Keycloak
-- `KEYCLOAK_REALM` - Nome do realm
-- `KEYCLOAK_CLIENT_ID` - ID do cliente
-- `KEYCLOAK_CLIENT_SECRET` - Segredo do cliente
-
----
-
----
-
-## Executando a Aplicação
-
-### Servidor de Desenvolvimento
-
-```bash
-php artisan serve
-# ou com Docker
-docker-compose up -d
-```
-
-Acesse: `http://localhost:8000`
-
-### Build para Produção
+### Sem Docker (manual)
 
 ```bash
 # Limpar e otimizar caches
 php artisan optimize
 php artisan config:cache
 php artisan route:cache
+php artisan view:cache
+composer dump-autoload --optimize --classmap-authoritative
 ```
+
+### Com Docker
+
+O Dockerfile.prod já executa automaticamente:
+- `composer install --no-dev`
+- `composer dump-autoload --optimize`
+- `php artisan config:cache`
+- `php artisan route:cache`
+- `php artisan view:cache`
+
+O entrypoint.sh executa automaticamente:
+- `php artisan key:generate` (se necessário)
+- `php artisan migrate` (em produção)
+- `php artisan db:seed --class=AdminUserSeeder` (se admin não existir em produção)
 
 ---
 
-## Assets (CSS/JS)
+## Variáveis de Ambiente por Ambiente
+
+### Desenvolvimento (.env.dev)
+
+```env
+APP_NAME=Oportunidade
+APP_ENV=local
+APP_KEY=base64:GENERATE_SECURE_KEY_HERE
+APP_DEBUG=true
+APP_URL=http://localhost:8000
+
+APP_LOCALE=pt_BR
+APP_FALLBACK_LOCALE=en
+APP_FAKER_LOCALE=pt_BR
+
+APP_MAINTENANCE_DRIVER=file
+
+BCRYPT_ROUNDS=10
+
+LOG_CHANNEL=stack
+LOG_STACK=single
+LOG_DEPRECATIONS_CHANNEL=null
+LOG_LEVEL=debug
+
+# Database
+DB_CONNECTION=mysql
+DB_HOST=db
+DB_PORT=3306
+DB_DATABASE=oportunidade_dev
+DB_USERNAME=oportunidade
+DB_PASSWORD=secret
+
+# Session
+SESSION_DRIVER=file
+SESSION_LIFETIME=120
+SESSION_ENCRYPT=false
+SESSION_PATH=/
+SESSION_DOMAIN=null
+
+BROADCAST_CONNECTION=log
+FILESYSTEM_DISK=local
+QUEUE_CONNECTION=sync
+
+# Cache - Redis para dev
+CACHE_STORE=redis
+REDIS_HOST=redis
+REDIS_PASSWORD=null
+REDIS_PORT=6379
+
+# Mail - Log para dev
+MAIL_MAILER=log
+MAIL_HOST=127.0.0.1
+MAIL_PORT=2525
+MAIL_USERNAME=null
+MAIL_PASSWORD=null
+MAIL_ENCRYPTION=null
+MAIL_FROM_ADDRESS="dev@localhost.com"
+MAIL_FROM_NAME="${APP_NAME}"
+
+# Xdebug
+XDEBUG_MODE=debug,develop
+
+# Keycloak Configuration - Desenvolvimento (Mock)
+KEYCLOAK_BASE_URL=https://keycloak.seu-dominio.com
+KEYCLOAK_REALM=senai-cimatec
+KEYCLOAK_CLIENT_ID=vagas-senai
+KEYCLOAK_CLIENT_SECRET=CHANGE_ME
+KEYCLOAK_REDIRECT_URI=http://localhost:8000/auth/callback
+KEYCLOAK_LOGOUT_URI=http://localhost:8000/logout
+
+# Development Mode (true = mock login, false = Keycloak real)
+KEYCLOAK_DEV_MODE=true
+KEYCLOAK_DEV_MOCK_EMAIL=admin@cimatec.edu.br
+KEYCLOAK_DEV_MOCK_PASSWORD_HASH=
+```
+
+### Produção (.env.prod)
+
+```env
+APP_NAME=Oportunidade
+APP_ENV=production
+APP_KEY=base64:GENERATE_SECURE_KEY_HERE
+APP_DEBUG=false
+APP_URL=https://seudominio.com.br
+
+APP_LOCALE=pt_BR
+APP_FALLBACK_LOCALE=en
+APP_FAKER_LOCALE=pt_BR
+
+APP_MAINTENANCE_DRIVER=file
+
+BCRYPT_ROUNDS=12
+
+LOG_CHANNEL=stack
+LOG_STACK=single
+LOG_DEPRECATIONS_CHANNEL=null
+LOG_LEVEL=warning
+
+# Database - Use senhas fortes!
+DB_CONNECTION=mysql
+DB_HOST=mysql_db
+DB_PORT=3306
+DB_DATABASE=oportunidade
+DB_USERNAME=oportunidade
+DB_PASSWORD=CHANGE_ME
+DB_ROOT_PASSWORD=CHANGE_ME
+
+# Session
+SESSION_DRIVER=redis
+SESSION_LIFETIME=120
+SESSION_ENCRYPT=true
+SESSION_PATH=/
+SESSION_DOMAIN=seudominio.com.br
+SESSION_SECURE_COOKIE=true
+
+BROADCAST_CONNECTION=redis
+FILESYSTEM_DISK=s3
+QUEUE_CONNECTION=redis
+
+# Cache - Redis em produção
+CACHE_STORE=redis
+REDIS_HOST=redis_prod
+REDIS_PASSWORD=CHANGE_ME
+REDIS_PORT=6379
+
+# Mail - Serviço real
+MAIL_MAILER=smtp
+MAIL_HOST=smtp.seuservico.com
+MAIL_PORT=587
+MAIL_USERNAME=seu-email@seudominio.com.br
+MAIL_PASSWORD=CHANGE_ME
+MAIL_ENCRYPTION=tls
+MAIL_FROM_ADDRESS="contato@seudominio.com.br"
+MAIL_FROM_NAME="${APP_NAME}"
+
+# Keycloak Configuration - Produção (SSO Real)
+KEYCLOAK_BASE_URL=https://keycloak.seu-dominio.com
+KEYCLOAK_REALM=senai-cimatec
+KEYCLOAK_CLIENT_ID=vagas-senai
+KEYCLOAK_CLIENT_SECRET=CHANGE_ME
+KEYCLOAK_REDIRECT_URI=https://seudominio.com.br/auth/callback
+KEYCLOAK_LOGOUT_URI=https://seudominio.com.br/logout
+
+# Production Mode (SSO Obrigatório)
+KEYCLOAK_DEV_MODE=false
+
+# Admin (configurar antes do deploy)
+KEYCLOAK_DEV_ADMIN_EMAIL=
+KEYCLOAK_DEV_ADMIN_PASSWORD_HASH=
+```
 
 ---
 
@@ -220,42 +501,6 @@ php artisan route:cache
 - [x] Sistema de Auditoria
 - [x] Autenticação SSO (Keycloak)
 - [x] JIT Provisioning (criação automática de usuários)
-- [x] Single Logout
-
----
-
-## Variáveis de Ambiente (.env)
-
-```env
-APP_NAME=Oportunidade
-APP_ENV=local
-APP_KEY=base64:...
-APP_DEBUG=true
-APP_URL=http://localhost:8000
-
-# Database
-DB_CONNECTION=mysql
-DB_HOST=127.0.0.1
-DB_PORT=3306
-DB_DATABASE=oportunidade
-DB_USERNAME=root
-DB_PASSWORD=
-
-# Cache
-CACHE_STORE=redis
-REDIS_HOST=127.0.0.1
-REDIS_PORT=6379
-
-# Session
-SESSION_DRIVER=redis
-
-# Keycloak SSO
-KEYCLOAK_BASE_URL=https://keycloak.sua-empresa.com.br
-KEYCLOAK_REALM=senai-cimatec
-KEYCLOAK_CLIENT_ID=vagas-senai
-KEYCLOAK_CLIENT_SECRET=
-KEYCLOAK_DEV_MODE=true
-```
 
 ---
 
@@ -269,4 +514,4 @@ KEYCLOAK_DEV_MODE=true
 | `php artisan storage:link` | Criar link simbólico |
 | `php artisan optimize:clear` | Limpar caches |
 | `php artisan vagas:encerrar-vencidas` | Encerrar vagas vencidas |
-
+| `php artisan key:generate` | Gerar chave da aplicação |
