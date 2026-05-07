@@ -46,17 +46,14 @@ composer install
 
 ### 3. Configurar Arquivo de Ambiente
 
-Os arquivos `.env` não são enviados ao repositório por segurança. Use os modelos disponíveis:
+Os arquivos `.env` não são enviados ao repositório por segurança. Use o modelo disponível:
 
 ```bash
 # Para desenvolvimento
 cp .env.dev .env
-
-# Para produção
-cp .env.prod .env
 ```
 
-**Importante:** Após copiar, edite o arquivo `.env` com suas configurações reales.
+**Nota:** Para ambiente de produção, o Dockerfile.prod já copia automaticamente o arquivo `.env.prod` para `.env`, não sendo necessário executar esse comando manualmente.
 
 ---
 
@@ -247,7 +244,7 @@ O sistema possui três níveis de acesso:
 - Criar novas vagas
 - Editar e excluir vagas criadas por ele
 - Acompanhar status das vagas
-- Download de editais e resultados
+- Upload de editais e resultados
 
 #### Admin (is_admin = true)
 - Todas as permissões de usuário padrão
@@ -262,7 +259,7 @@ O sistema possui três níveis de acesso:
 - Criar e remover outros administradores
 - Acessar configurações do sistema
 - Histórico de auditoria
-- Restaurar/excluir permanentemente registries da lixeira
+- Restaurar/excluir permanentemente registro/vaga da lixeira
 
 ### Criação de Usuários em Produção
 
@@ -294,7 +291,7 @@ O admin inicial pode ser criado automaticamente no primeiro deploy:
    docker-compose -f docker-compose.prod.yml up -d --build
    ```
 
-3. O entrypoint.sh criará o automaticamente se não existir admin principal no banco.
+3. O entrypoint.sh criará o usuário automaticamente se não existir admin principal no banco.
 
 ---
 
@@ -342,28 +339,65 @@ APP_LOCALE=pt_BR
 APP_FALLBACK_LOCALE=en
 APP_FAKER_LOCALE=pt_BR
 
+APP_MAINTENANCE_DRIVER=file
+
+BCRYPT_ROUNDS=10
+
 LOG_CHANNEL=stack
 LOG_STACK=single
 LOG_DEPRECATIONS_CHANNEL=null
 LOG_LEVEL=debug
 
+# Database
 DB_CONNECTION=mysql
-DB_HOST=127.0.0.1
+DB_HOST=db
 DB_PORT=3306
-DB_DATABASE=oportunidade
-DB_USERNAME=root
-DB_PASSWORD=
+DB_DATABASE=oportunidade_dev
+DB_USERNAME=oportunidade
+DB_PASSWORD=secret
 
+# Session
 SESSION_DRIVER=file
-CACHE_STORE=file
+SESSION_LIFETIME=120
+SESSION_ENCRYPT=false
+SESSION_PATH=/
+SESSION_DOMAIN=null
 
-KEYCLOAK_BASE_URL=http://localhost:8080
+BROADCAST_CONNECTION=log
+FILESYSTEM_DISK=local
+QUEUE_CONNECTION=sync
+
+# Cache - Redis para dev
+CACHE_STORE=redis
+REDIS_HOST=redis
+REDIS_PASSWORD=null
+REDIS_PORT=6379
+
+# Mail - Log para dev
+MAIL_MAILER=log
+MAIL_HOST=127.0.0.1
+MAIL_PORT=2525
+MAIL_USERNAME=null
+MAIL_PASSWORD=null
+MAIL_ENCRYPTION=null
+MAIL_FROM_ADDRESS="dev@localhost.com"
+MAIL_FROM_NAME="${APP_NAME}"
+
+# Xdebug
+XDEBUG_MODE=debug,develop
+
+# Keycloak Configuration - Desenvolvimento (Mock)
+KEYCLOAK_BASE_URL=https://keycloak.seu-dominio.com
 KEYCLOAK_REALM=senai-cimatec
 KEYCLOAK_CLIENT_ID=vagas-senai
-KEYCLOAK_CLIENT_SECRET=teste
+KEYCLOAK_CLIENT_SECRET=CHANGE_ME
+KEYCLOAK_REDIRECT_URI=http://localhost:8000/auth/callback
+KEYCLOAK_LOGOUT_URI=http://localhost:8000/logout
+
+# Development Mode (true = mock login, false = Keycloak real)
 KEYCLOAK_DEV_MODE=true
 KEYCLOAK_DEV_MOCK_EMAIL=admin@cimatec.edu.br
-KEYCLOAK_DEV_MOCK_PASSWORD_HASH='$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi'
+KEYCLOAK_DEV_MOCK_PASSWORD_HASH=
 ```
 
 ### Produção (.env.prod)
@@ -379,19 +413,25 @@ APP_LOCALE=pt_BR
 APP_FALLBACK_LOCALE=en
 APP_FAKER_LOCALE=pt_BR
 
+APP_MAINTENANCE_DRIVER=file
+
+BCRYPT_ROUNDS=12
+
 LOG_CHANNEL=stack
 LOG_STACK=single
 LOG_DEPRECATIONS_CHANNEL=null
 LOG_LEVEL=warning
 
+# Database - Use senhas fortes!
 DB_CONNECTION=mysql
 DB_HOST=mysql_db
 DB_PORT=3306
 DB_DATABASE=oportunidade
 DB_USERNAME=oportunidade
-DB_PASSWORD=senha_forte_aqui
-DB_ROOT_PASSWORD=senha_root_forte
+DB_PASSWORD=CHANGE_ME
+DB_ROOT_PASSWORD=CHANGE_ME
 
+# Session
 SESSION_DRIVER=redis
 SESSION_LIFETIME=120
 SESSION_ENCRYPT=true
@@ -399,20 +439,40 @@ SESSION_PATH=/
 SESSION_DOMAIN=seudominio.com.br
 SESSION_SECURE_COOKIE=true
 
-CACHE_STORE=redis
 BROADCAST_CONNECTION=redis
+FILESYSTEM_DISK=s3
 QUEUE_CONNECTION=redis
+
+# Cache - Redis em produção
+CACHE_STORE=redis
 REDIS_HOST=redis_prod
-REDIS_PASSWORD=senha_redis_forte
+REDIS_PASSWORD=CHANGE_ME
 REDIS_PORT=6379
 
-KEYCLOAK_BASE_URL=https://keycloak.sua-empresa.com.br
+# Mail - Serviço real
+MAIL_MAILER=smtp
+MAIL_HOST=smtp.seuservico.com
+MAIL_PORT=587
+MAIL_USERNAME=seu-email@seudominio.com.br
+MAIL_PASSWORD=CHANGE_ME
+MAIL_ENCRYPTION=tls
+MAIL_FROM_ADDRESS="contato@seudominio.com.br"
+MAIL_FROM_NAME="${APP_NAME}"
+
+# Keycloak Configuration - Produção (SSO Real)
+KEYCLOAK_BASE_URL=https://keycloak.seu-dominio.com
 KEYCLOAK_REALM=senai-cimatec
 KEYCLOAK_CLIENT_ID=vagas-senai
-KEYCLOAK_CLIENT_SECRET=chave_gerada_no_keycloak
+KEYCLOAK_CLIENT_SECRET=CHANGE_ME
 KEYCLOAK_REDIRECT_URI=https://seudominio.com.br/auth/callback
 KEYCLOAK_LOGOUT_URI=https://seudominio.com.br/logout
+
+# Production Mode (SSO Obrigatório)
 KEYCLOAK_DEV_MODE=false
+
+# Admin (configurar antes do deploy)
+KEYCLOAK_DEV_ADMIN_EMAIL=
+KEYCLOAK_DEV_ADMIN_PASSWORD_HASH=
 ```
 
 ---
@@ -441,7 +501,6 @@ KEYCLOAK_DEV_MODE=false
 - [x] Sistema de Auditoria
 - [x] Autenticação SSO (Keycloak)
 - [x] JIT Provisioning (criação automática de usuários)
-- [x] Single Logout
 
 ---
 
