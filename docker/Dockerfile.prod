@@ -43,6 +43,9 @@ COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 # Copiar configuração PHP para produção
 COPY docker/php/php.prod.ini /usr/local/etc/php/conf.d/custom.ini
 
+# Copiar configuração de produção
+COPY --chown=www-data:www-data .env.prod /var/www/.env
+
 # Limpar arquivos de desenvolvimento do container
 RUN rm -rf \
     tests \
@@ -52,7 +55,6 @@ RUN rm -rf \
     .env \
     .env.example \
     .env.dev \
-    .env.prod \
     .gitignore \
     .gitattributes \
     docker-compose.yml \
