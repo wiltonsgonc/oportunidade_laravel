@@ -5,7 +5,8 @@
 .github
 node_modules
 /public/build
-/storage/logs
+/storage/logs/*
+/storage/logs/.gitignore
 /storage/framework/cache
 /storage/framework/sessions
 /storage/framework/views
